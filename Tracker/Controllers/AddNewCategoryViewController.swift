@@ -16,6 +16,7 @@ final class AddNewCategoryViewController: UIViewController {
         textField.clearButtonMode = .whileEditing
         textField.clipsToBounds = true
         textField.becomeFirstResponder()
+        textField.returnKeyType = .done
         textField.delegate = self
         return textField
     }()
