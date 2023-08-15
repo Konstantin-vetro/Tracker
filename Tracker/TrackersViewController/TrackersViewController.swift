@@ -163,6 +163,8 @@ class TrackersViewController: UIViewController, TrackerViewControllerDelegate {
                     if schedule.contains(where: { $0 == day }) {
                         filterTrackers.append(tracker)
                     }
+                } else {
+                    filterTrackers.append(tracker)
                 }
             }
             
