@@ -7,12 +7,19 @@ import UIKit
 
 extension UIColor {
     static var BackgroundDay: UIColor { UIColor(named: "Background(day)") ?? UIColor.gray }
+    
     static var BackgroundNight: UIColor { UIColor(named: "Background(night)") ?? UIColor.darkGray }
+    
     static var BlackDay: UIColor { UIColor(named: "Black(day)") ?? UIColor.black }
+    
     static var Blue: UIColor { UIColor(named: "Blue") ?? UIColor.blue }
+    
     static var Gray: UIColor { UIColor(named: "Gray") ?? UIColor.gray }
+    
     static var LightGray: UIColor { UIColor(named: "Light Gray") ?? UIColor.lightGray }
+    
     static var Red: UIColor { UIColor(named: "Red") ?? UIColor.red }
+    
     static var defaultColor: UIColor { UIColor(named: "defaultColor") ?? UIColor.white}
     
     static let colorSelection: [UIColor] = [

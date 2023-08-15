@@ -20,7 +20,7 @@ final class AddNewCategoryViewController: UIViewController {
         textField.delegate = self
         return textField
     }()
-
+    
     private lazy var doneButton: UIButton = {
         let button = UIButton()
         button.setTitle("Готово", for: .normal)
@@ -33,7 +33,9 @@ final class AddNewCategoryViewController: UIViewController {
     }()
     
     weak var delegate: AddNewСategoryViewControllerDelegate?
+    
     var isEdit: Bool = false
+    
     var editText: String?
     
     override func viewDidLoad() {
@@ -42,14 +44,13 @@ final class AddNewCategoryViewController: UIViewController {
         editCategory()
         title = isEdit ? "Редактировать" : "Новая категория"
     }
-    
-// MARK: - Layouts
+    // MARK: - Layouts
     private func setupViews() {
         [textField, doneButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
-
+        
         view.backgroundColor = .white
         
         NSLayoutConstraint.activate([
@@ -64,7 +65,7 @@ final class AddNewCategoryViewController: UIViewController {
             doneButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
         ])
     }
-    
+    // MARK: - Action
     @objc
     private func saveCategory() {
         guard let text = textField.text, !text.trimmingCharacters(in: .whitespaces).isEmpty else { return }
@@ -75,25 +76,29 @@ final class AddNewCategoryViewController: UIViewController {
         }
         dismiss(animated: true)
     }
-    
+    // MARK: - EditCategory
     private func editCategory() {
         if isEdit {
             textField.text = editText
-
+            
             doneButton.backgroundColor = .BlackDay
             doneButton.setTitleColor(.white, for: .normal)
             doneButton.isEnabled = true
         }
     }
 }
-// MARK: - UITextFieldDelegate
+    // MARK: - UITextFieldDelegate
 extension AddNewCategoryViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
     
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    func textField(
+        _ textField: UITextField,
+        shouldChangeCharactersIn range: NSRange,
+        replacementString string: String
+    ) -> Bool {
         let newText = (textField.text as NSString?)?.replacingCharacters(in: range, with: string) ?? ""
         if newText.isEmpty || newText.first == " " {
             doneButton.backgroundColor = .Gray

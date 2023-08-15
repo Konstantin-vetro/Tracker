@@ -11,6 +11,7 @@ protocol TrackerCellDelegate: AnyObject {
 
 final class TrackerCell: UICollectionViewCell {
     static let identifier = "TrackerCell"
+    
     weak var delegate: TrackerCellDelegate?
     
     private lazy var colorView: UIView = {
@@ -73,7 +74,7 @@ final class TrackerCell: UICollectionViewCell {
         
         self.backgroundColor = .white
         
-    // MARK: - Layouts
+        // MARK: - Layouts
         NSLayoutConstraint.activate([
             colorView.heightAnchor.constraint(equalToConstant: 90),
             colorView.topAnchor.constraint(equalTo: topAnchor),
@@ -98,7 +99,7 @@ final class TrackerCell: UICollectionViewCell {
             plusButton.widthAnchor.constraint(equalToConstant: 34)
         ])
     }
-    
+    // MARK: - Action
     @objc
     private func buttonTapped() {
         let now = Date()
@@ -110,8 +111,7 @@ final class TrackerCell: UICollectionViewCell {
             showAlert("Нельзя отмечать трекеры для будущих дат")
         }
     }
-    
-// MARK: - Functions
+    // MARK: - Functions
     func setupCell(tracker: Tracker) {
         colorView.backgroundColor = tracker.color
         textLabel.text = tracker.name
@@ -119,11 +119,11 @@ final class TrackerCell: UICollectionViewCell {
         plusButton.backgroundColor = tracker.color
     }
     
-    func didCompleteTracker(days: Int, isToday: Bool) {
+    func completeTracker(days: Int, isToday: Bool) {
         updatePlusButton(trackerCompleted: isToday)
         updateCounterText(days: days)
     }
-
+    
     private func updatePlusButton(trackerCompleted: Bool) {
         let image: UIImage = (trackerCompleted ? UIImage(systemName: "checkmark") : UIImage(systemName: "plus"))!
         plusButton.setImage(image, for: .normal)
@@ -151,7 +151,7 @@ final class TrackerCell: UICollectionViewCell {
             return nil
         }
     }
-
+    
     private func showAlert(_ message: String) {
         if let parentalViewController = findParentViewController() {
             let alert = UIAlertController(title: "Ошибка", message: message, preferredStyle: .alert)

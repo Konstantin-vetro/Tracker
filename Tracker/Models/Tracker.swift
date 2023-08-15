@@ -3,6 +3,9 @@
 //  Tracker
 //
 
+///сущность для хранения информации про трекер
+///(для «Привычки» или «Нерегулярного события»)
+
 import UIKit
 
 struct Tracker  {
@@ -11,14 +14,4 @@ struct Tracker  {
     let color: UIColor
     let emojie: String
     let shedule: [String]?
-}
-
-struct TrackerCategory {
-    var title: String
-    var trackers: [Tracker]
-}
-
-struct TrackerRecord: Hashable {
-    let id: UUID
-    let date: Date
 }

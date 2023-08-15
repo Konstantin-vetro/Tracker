@@ -11,6 +11,7 @@ protocol SheduleViewCellDelegate: AnyObject {
 
 final class SheduleViewCell: UITableViewCell {
     static let identifier = "sheduleCell"
+    
     weak var delegateCell: SheduleViewCellDelegate?
     
     private lazy var switchDay: UISwitch = {
@@ -40,7 +41,7 @@ final class SheduleViewCell: UITableViewCell {
             ]
         )
     }
-    
+    // MARK: - Action
     @objc
     private func switchTapped(_ sender: UISwitch) {
         if let daysOfWeek = textLabel?.text {
@@ -48,7 +49,7 @@ final class SheduleViewCell: UITableViewCell {
             delegateCell?.didToogleSwitch(for: shortDay, isOn: sender.isOn)
         }
     }
-    
+    // MARK: - Shorten the Days
     private func shortDays(for day: String) -> String {
         switch day {
         case "Понедельник":

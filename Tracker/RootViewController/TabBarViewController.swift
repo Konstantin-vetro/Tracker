@@ -6,7 +6,9 @@
 import UIKit
 
 final class TabBarViewController: UITabBarController {
+    
     let trackersViewController = UINavigationController(rootViewController: TrackersViewController())
+    
     let statisticViewController = UINavigationController(rootViewController: StatisticViewController())
     
     override func viewDidLoad() {
@@ -26,7 +28,11 @@ final class TabBarViewController: UITabBarController {
         ]
     }
     
-    private func generateViewController(viewController: UIViewController, title: String, image: UIImage?) -> UIViewController {
+    private func generateViewController(
+        viewController: UIViewController,
+        title: String,
+        image: UIImage?
+    ) -> UIViewController {
         viewController.tabBarItem.title = title
         viewController.tabBarItem.image = image
         return viewController

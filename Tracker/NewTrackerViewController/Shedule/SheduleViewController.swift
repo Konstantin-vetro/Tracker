@@ -29,7 +29,12 @@ final class SheduleViewController: UIViewController {
     }()
     
     weak var delegate: HabitDelegate?
-    private let weekDays: [String] = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"]
+    
+    private let weekDays: [String] = [
+        "Понедельник", "Вторник", "Среда",
+        "Четверг", "Пятница", "Суббота", "Воскресенье"
+    ]
+    
     private var shedule: [String] = []
     
     override func viewDidLoad() {
@@ -37,13 +42,13 @@ final class SheduleViewController: UIViewController {
         setupViews()
     }
     
-// MARK: - Layouts
+    // MARK: - Layouts
     private func setupViews() {
         [tableView, doneButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
-
+        
         view.backgroundColor = .white
         
         NSLayoutConstraint.activate([
@@ -59,14 +64,13 @@ final class SheduleViewController: UIViewController {
             doneButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
         ])
     }
-    
+    // MARK: - Action
     @objc
     private func saveWeekDays() {
-        delegate?.addDetailDays(shedule)        
+        delegate?.addDetailDays(shedule)
         dismiss(animated: true)
     }
 }
-
 // MARK: - UITableViewDataSource
 extension SheduleViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -74,7 +78,11 @@ extension SheduleViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: SheduleViewCell.identifier, for: indexPath) as? SheduleViewCell else { return UITableViewCell()}
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: SheduleViewCell.identifier,
+            for: indexPath
+        ) as? SheduleViewCell else { return UITableViewCell() }
+        
         cell.textLabel?.text = weekDays[indexPath.row]
         cell.backgroundColor = .defaultColor
         cell.delegateCell = self

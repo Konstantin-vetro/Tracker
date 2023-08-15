@@ -12,7 +12,11 @@ protocol AddNewСategoryViewControllerDelegate: AnyObject {
 
 final class CategoriesViewController: UIViewController {
     private lazy var tableView: UITableView = {
-        let tableView = UITableView(frame: CGRect(x: 0, y: 0, width: view.bounds.size.width, height: 500), style: .insetGrouped)
+        let tableView = UITableView(frame: CGRect(x: 0,
+                                                  y: 0,
+                                                  width: view.bounds.size.width,
+                                                  height: 500),
+                                    style: .insetGrouped)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "categoryCell")
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         tableView.backgroundColor = .white
@@ -29,13 +33,41 @@ final class CategoriesViewController: UIViewController {
         return button
     }()
     
-    weak var delegate: HabitDelegate?
-    private var categories: [String] = []
-    private var editingIndexPath: IndexPath?
+    let userDefaults = UserDefaults.standard
     
-    // MARK: - LifeCycles
+    weak var delegate: HabitDelegate?
+    
+    private var categories: [String] {
+        get {
+            if let savedData = UserDefaults.standard.data(forKey: "categories"),
+               let loadedArray = try? JSONDecoder().decode([String].self, from: savedData) {
+                return loadedArray
+            } else {
+                return [String]()
+            }
+        } set {
+            let newData = try? JSONEncoder().encode(newValue)
+            UserDefaults.standard.set(newData, forKey: "categories")
+            UserDefaults.standard.synchronize()
+        }
+    }
+    
+    private var editingIndexPath: IndexPath? {
+        didSet {
+            guard let indexPath = editingIndexPath else { return }
+            let selectedRow = indexPath.row
+            userDefaults.set(selectedRow, forKey: "editingIndexPath")
+            userDefaults.synchronize()
+        }
+    }
+    
+    // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if let savedRow = userDefaults.object(forKey: "editingIndexPath") as? Int {
+            editingIndexPath = IndexPath(row: savedRow, section: 0)
+        }
         setupViews()
         updateTableView()
     }
@@ -64,17 +96,18 @@ final class CategoriesViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
     }
-    
+    // MARK: - Action
     @objc
     private func addNewCategory() {
         goToAddNewCategory(isEdit: false)
     }
-    
+    // MARK: - Functions
     private func goToAddNewCategory(isEdit: Bool = false, text: String? = nil) {
         let addNewCategoryViewController = AddNewCategoryViewController()
         addNewCategoryViewController.delegate = self
         addNewCategoryViewController.isEdit = isEdit
         addNewCategoryViewController.editText = text
+        
         let navigationController = UINavigationController(rootViewController: addNewCategoryViewController)
         navigationController.navigationBar.barTintColor = .white
         navigationController.navigationBar.shadowImage = UIImage()
@@ -115,7 +148,9 @@ extension CategoriesViewController: UITableViewDataSource {
         return cell
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView,
+                   commit editingStyle: UITableViewCell.EditingStyle,
+                   forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             categories.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .automatic)
@@ -129,17 +164,22 @@ extension CategoriesViewController: UITableViewDelegate {
             let previousSelectedCell = tableView.cellForRow(at: editingIndexPath)
             previousSelectedCell?.accessoryType = .none
         }
-        
         let cell = tableView.cellForRow(at: indexPath)
         cell?.accessoryType = .checkmark
         editingIndexPath = indexPath
+        
         delegate?.addDetailCategory(categories[indexPath.row])
         tableView.deselectRow(at: indexPath, animated: true)
+        dismiss(animated: true)
     }
     
-    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+    func tableView(
+        _ tableView: UITableView,
+        contextMenuConfigurationForRowAt indexPath: IndexPath,
+        point: CGPoint
+    ) -> UIContextMenuConfiguration? {
         editingIndexPath = indexPath
-
+        
         let editAction = UIAction(title: "Редактировать") { [weak self] _ in
             guard let self = self else { return }
             
@@ -161,8 +201,7 @@ extension CategoriesViewController: UITableViewDelegate {
         })
     }
 }
-
-// MARK: - AddNewcategoryViewControllerDelegate
+    // MARK: - AddNewcategoryViewControllerDelegate
 extension CategoriesViewController: AddNewСategoryViewControllerDelegate {
     func editCategory(_ editText: String) {
         if let editingIndexPath = editingIndexPath {

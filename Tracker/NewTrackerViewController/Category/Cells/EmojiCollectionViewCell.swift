@@ -7,6 +7,7 @@ import UIKit
 
 final class EmojiCollectionViewCell: UICollectionViewCell {
     static let identifier = "cell"
+    
     var isEmojiSelected: Bool = false
     
     let titleLabel: UILabel = {

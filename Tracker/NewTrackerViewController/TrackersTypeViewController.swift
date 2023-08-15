@@ -38,7 +38,7 @@ final class TrackersTypeViewController: UIViewController {
             view.addSubview($0)
         }
         view.backgroundColor = .white
-        
+    // MARK: - Layout
         NSLayoutConstraint.activate([
             habitButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             habitButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
@@ -52,15 +52,16 @@ final class TrackersTypeViewController: UIViewController {
             irregularEventButton.heightAnchor.constraint(equalTo: habitButton.heightAnchor)
         ])
     }
-    
+    // MARK: - Actions
     @objc
     private func addNewHabit() {
         let habitViewController = NewTrackerViewController()
         habitViewController.title = "Новая привычка"
-        habitViewController.onTrackerCreated = {[weak self] tracker, titleCategory in
+        habitViewController.onTrackerCreated = { [weak self] tracker, titleCategory in
             guard let self = self else { return }
             self.delegate?.createTracker(tracker, titleCategory: titleCategory)
         }
+        
         let navigationController = UINavigationController(rootViewController: habitViewController)
         navigationController.navigationBar.barTintColor = .white
         navigationController.navigationBar.shadowImage = UIImage()
@@ -76,6 +77,7 @@ final class TrackersTypeViewController: UIViewController {
             self.delegate?.createTracker(tracker, titleCategory: titleCategory)
         }
         eventViewController.chooseIrregularEvent = true
+        
         let navigationController = UINavigationController(rootViewController: eventViewController)
         navigationController.navigationBar.barTintColor = .white
         navigationController.navigationBar.shadowImage = UIImage()
