@@ -59,7 +59,7 @@ final class TrackersTypeViewController: UIViewController {
         habitViewController.title = "Новая привычка"
         habitViewController.onTrackerCreated = { [weak self] tracker, titleCategory in
             guard let self = self else { return }
-            self.delegate?.createTracker(tracker, titleCategory: titleCategory)
+            self.delegate?.createTracker(tracker, titleCategory: titleCategory ?? "")
         }
         
         let navigationController = UINavigationController(rootViewController: habitViewController)
@@ -74,7 +74,7 @@ final class TrackersTypeViewController: UIViewController {
         eventViewController.title = "Новое нерегулярное событие"
         eventViewController.onTrackerCreated = { [weak self] (tracker, titleCategory) in
             guard let self = self else { return }
-            self.delegate?.createTracker(tracker, titleCategory: titleCategory)
+            self.delegate?.createTracker(tracker, titleCategory: titleCategory ?? "")
         }
         eventViewController.chooseIrregularEvent = true
         

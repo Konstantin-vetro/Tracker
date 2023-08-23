@@ -135,7 +135,7 @@ final class TrackerCell: UICollectionViewCell {
         switch days % 10 {
         case 1:
             counterLabel.text = "\(days) день"
-        case 2:
+        case 2 ... 4:
             counterLabel.text = "\(days) дня"
         default:
             counterLabel.text = "\(days) дней"
@@ -154,7 +154,7 @@ final class TrackerCell: UICollectionViewCell {
     
     private func showAlert(_ message: String) {
         if let parentalViewController = findParentViewController() {
-            let alert = UIAlertController(title: "Ошибка", message: message, preferredStyle: .alert)
+            let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: .default)
             alert.addAction(okAction)
             parentalViewController.present(alert, animated: true, completion: nil)
