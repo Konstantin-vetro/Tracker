@@ -14,7 +14,7 @@ enum TrackerRecordStoreError: Error {
 final class TrackerRecordStore: NSObject {
     private let context: NSManagedObjectContext
     
-    private lazy var fetchedResultController: NSFetchedResultsController<TrackerRecordCoreData>! = {
+    private lazy var fetchedResultController: NSFetchedResultsController<TrackerRecordCoreData> = {
         let request = NSFetchRequest<TrackerRecordCoreData>(entityName: "TrackerRecordCoreData")
         let sortDescriptor = NSSortDescriptor(keyPath: \TrackerRecordCoreData.id, ascending: true)
         request.sortDescriptors = [sortDescriptor]
@@ -35,7 +35,7 @@ final class TrackerRecordStore: NSObject {
         let objects = try? context.fetch(request)
         var records: Set<TrackerRecord> = []
         objects?.forEach({ trackerRecordCoreData in
-            let record = try! makeTrackerRecord(from: trackerRecordCoreData)
+            guard let record = try? makeTrackerRecord(from: trackerRecordCoreData) else { return }
             records.insert(record)
         })
         return records

@@ -20,9 +20,10 @@ final class EmptyView: UIView {
         return label
     }()
     
-    init(frame: CGRect, text: String) {
+    init(frame: CGRect, image: UIImage, text: String) {
         super.init(frame: frame)
         self.backgroundColor = .white
+        self.placeholderImage.image = image
         self.textLabel.text = text
         setupViews()
     }

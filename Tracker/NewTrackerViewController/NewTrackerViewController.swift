@@ -397,7 +397,7 @@ extension NewTrackerViewController: UICollectionViewDelegate, UICollectionViewDe
             let cell = collectionView.cellForItem(at: indexPath)
             cell?.layer.cornerRadius = 10
             cell?.layer.borderWidth = 3
-            cell?.layer.borderColor = UIColor.systemGreen.cgColor
+            cell?.layer.borderColor = UIColor.borderColor.cgColor
             isSelectedColor = indexPath
             createButton.backgroundColor = .BlackDay
             createButton.isEnabled = true

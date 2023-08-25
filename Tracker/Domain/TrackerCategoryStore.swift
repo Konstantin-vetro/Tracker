@@ -87,7 +87,7 @@ final class TrackerCategoryStore: NSObject {
         let trackerCoreData = try trackerStore.createTracker(from: tracker)
         
         if let currentCategory = try? fetchedCategory(with: titleCategory) {
-            var newCoreDataTrackers = currentCategory.trackers!.allObjects as! [TrackerCoreData]
+            var newCoreDataTrackers = currentCategory.trackers?.allObjects as! [TrackerCoreData]
             newCoreDataTrackers.append(trackerCoreData)
             currentCategory.trackers = NSSet(array: newCoreDataTrackers)
         } else {

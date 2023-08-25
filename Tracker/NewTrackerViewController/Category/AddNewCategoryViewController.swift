@@ -42,6 +42,7 @@ final class AddNewCategoryViewController: UIViewController {
         super.viewDidLoad()
         setupViews()
         editCategory()
+        addTapGestureToHideKeyboard()
         title = isEdit ? "Редактировать" : "Новая категория"
     }
     // MARK: - Layouts
@@ -118,5 +119,17 @@ extension AddNewCategoryViewController: UITextFieldDelegate {
             doneButton.backgroundColor = .Gray
             doneButton.setTitleColor(.white, for: .normal)
         }
+    }
+}
+// MARK: - Hide Keyboard
+extension AddNewCategoryViewController {
+    func addTapGestureToHideKeyboard() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
+        view.addGestureRecognizer(tapGesture)
+    }
+
+    @objc
+    func hideKeyboard() {
+        view.endEditing(true)
     }
 }

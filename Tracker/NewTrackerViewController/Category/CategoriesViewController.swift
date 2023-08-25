@@ -116,11 +116,13 @@ final class CategoriesViewController: UIViewController {
     
     private func updateTableView() {
         if categories.isEmpty {
+            guard let image = UIImage(named: "placeholderImage") else { return }
             let emptyView = EmptyView(frame: CGRect(
                 x: 0,
                 y: 0,
                 width: view.bounds.width,
                 height: view.bounds.height),
+                                      image: image,
                                       text: "Привычки и события можно\nобъединить по смыслу")
             tableView.backgroundView = emptyView
         } else {
