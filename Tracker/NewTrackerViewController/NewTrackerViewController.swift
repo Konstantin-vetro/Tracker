@@ -33,7 +33,7 @@ final class NewTrackerViewController: UIViewController {
     }()
     
     private lazy var tableView: UITableView = {
-        let tableView = UITableView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 200),
+        let tableView = UITableView(frame: CGRect(x: 0, y: 0, width: .zero, height: .zero),
                                     style: .insetGrouped)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.register(SubtitledTableViewCell.self, forCellReuseIdentifier: "cell")
@@ -118,6 +118,8 @@ final class NewTrackerViewController: UIViewController {
     // MARK: - Properties
     private var labelBetweenTextFieldAndTableContraint: NSLayoutConstraint!
     
+    private var tableViewHeightContraint: NSLayoutConstraint!
+    
     private var collectionViewHeightContraint: NSLayoutConstraint!
     
     var chooseIrregularEvent: Bool = false
@@ -192,8 +194,7 @@ final class NewTrackerViewController: UIViewController {
             constant: 0
         )
         
-        let tableViewHeightContraint = tableView.heightAnchor.constraint(equalToConstant: 0)
-        tableViewHeightContraint.constant = tableView.contentSize.height
+        tableViewHeightContraint = tableView.heightAnchor.constraint(equalToConstant: tableView.contentSize.height)
         collectionViewHeightContraint = collectionView.heightAnchor.constraint(equalToConstant: 0)
         
         // MARK: - Layouts
@@ -215,9 +216,11 @@ final class NewTrackerViewController: UIViewController {
             scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            contentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
             textField.heightAnchor.constraint(equalToConstant: 75),
             textField.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 24),
@@ -235,7 +238,7 @@ final class NewTrackerViewController: UIViewController {
             tableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             
             collectionViewHeightContraint,
-            collectionView.topAnchor.constraint(equalTo: tableView.bottomAnchor),
+            collectionView.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 0),
             collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             
