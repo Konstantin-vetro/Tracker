@@ -27,7 +27,6 @@ final class TrackerRecordStore: NSObject {
         try? controller.performFetch()
         return controller
     }()
-
     
     var records: Set<TrackerRecord> {
         let request = NSFetchRequest<TrackerRecordCoreData>(entityName: "TrackerRecordCoreData")
@@ -35,8 +34,12 @@ final class TrackerRecordStore: NSObject {
         let objects = try? context.fetch(request)
         var records: Set<TrackerRecord> = []
         objects?.forEach({ trackerRecordCoreData in
-            guard let record = try? makeTrackerRecord(from: trackerRecordCoreData) else { return }
-            records.insert(record)
+            do {
+                let record = try makeTrackerRecord(from: trackerRecordCoreData)
+                records.insert(record)
+            } catch {
+                print("Error creating a TrackerRecord from trackerRecordCoreData: \(error)")
+            }
         })
         return records
     }
