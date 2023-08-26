@@ -30,6 +30,7 @@ final class CategoriesViewController: UIViewController {
         button.backgroundColor = .BlackDay
         button.layer.cornerRadius = 16
         button.addTarget(self, action: #selector(addNewCategory), for: .touchUpInside)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         return button
     }()
     

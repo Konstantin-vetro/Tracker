@@ -25,6 +25,7 @@ final class SheduleViewController: UIViewController {
         button.backgroundColor = .BlackDay
         button.layer.cornerRadius = 16
         button.addTarget(self, action: #selector(saveWeekDays), for: .touchUpInside)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         return button
     }()
     

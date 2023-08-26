@@ -10,6 +10,7 @@ final class TrackersTypeViewController: UIViewController {
         let button = UIButton()
         button.setTitle("Привычка", for: .normal)
         button.addTarget(self, action: #selector(addNewHabit), for: .touchUpInside)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         return button
     }()
     
@@ -17,6 +18,7 @@ final class TrackersTypeViewController: UIViewController {
         let button = UIButton()
         button.setTitle("Нерегулярное событие", for: .normal)
         button.addTarget(self, action: #selector(addIreggularEvent), for: .touchUpInside)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         return button
     }()
     

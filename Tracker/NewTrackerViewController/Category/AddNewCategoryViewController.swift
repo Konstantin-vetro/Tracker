@@ -28,6 +28,7 @@ final class AddNewCategoryViewController: UIViewController {
         button.backgroundColor = .Gray
         button.layer.cornerRadius = 16
         button.addTarget(self, action: #selector(saveCategory), for: .touchUpInside)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         button.isEnabled = false
         return button
     }()
