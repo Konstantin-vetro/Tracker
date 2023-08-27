@@ -76,9 +76,11 @@ class TrackersViewController: UIViewController, TrackerViewControllerDelegate {
     // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        categories = trackerCategoryStore.categories
+        completedTrackers = trackerRecordStore.records
         setupNavigationBar()
         setupView()
-        loadDataFromCoreData()
+        showVisibleCategories()
         isCompletedTracker()
         showBackgroundView(forCollection: true)
     }
@@ -107,61 +109,13 @@ class TrackersViewController: UIViewController, TrackerViewControllerDelegate {
     
     @objc
     private func datePickerValueChanges(_ sender: UIDatePicker) {
+        if let searchText = searchTextField.text, !searchText.isEmpty {
+            filterCategories(with: searchText)
+        } else {
+            showVisibleCategories()
+        }
         isCompletedTracker()
-        
-        let weekDay = sender.calendar.component(.weekday, from: sender.date)
-        var day = ""
-        
-        switch weekDay {
-        case 1:
-            day = "Вс"
-        case 2:
-            day = "Пн"
-        case 3:
-            day = "Вт"
-        case 4:
-            day = "Ср"
-        case 5:
-            day = "Чт"
-        case 6:
-            day = "Пт"
-        case 7:
-            day = "Сб"
-        default:
-            break
-        }
-        
-        filteredCategoriesByDate = categories
-        for category in categories {
-            var filterTrackers: [Tracker] = []
-            for tracker in category.trackers {
-                if let schedule = tracker.shedule, !schedule.isEmpty {
-                    if schedule.contains(where: { $0 == day }) {
-                        filterTrackers.append(tracker)
-                    }
-                } else {
-                    filterTrackers.append(tracker)
-                }
-            }
-            
-            let newCategory = TrackerCategory(title: category.title, trackers: filterTrackers)
-            if newCategory.title == category.title {
-                guard let index = categories.firstIndex(where: { $0.title == newCategory.title }) else { return }
-                categories[index] = newCategory
-            }
-        }
-        
-        for category in categories {
-            if category.trackers.isEmpty {
-                guard let index = categories.firstIndex(where: { $0.trackers.isEmpty }) else { return }
-                categories.remove(at: index)
-            }
-        }
-        visibleCategories = categories
-        showBackgroundView(forCollection: true)
-        dismiss(animated: true) {
-            self.categories = self.filteredCategoriesByDate
-        }
+        dismiss(animated: true)
     }
     // MARK: - Layouts
     private func setupView() {
@@ -201,22 +155,51 @@ class TrackersViewController: UIViewController, TrackerViewControllerDelegate {
         navigationItem.rightBarButtonItem = date
     }
     
-    private func loadDataFromCoreData() {
-        categories = trackerCategoryStore.categories
-        completedTrackers = trackerRecordStore.records
+    private func showVisibleCategories() {
+        categories = trackerCategoryStore.categories.sorted {
+            $0.title.lowercased() < $1.title.lowercased()
+        }
         
+        completedTrackers = trackerRecordStore.records
+
         visibleCategories = categories.map { category -> TrackerCategory in
             let filteredTrackers = category.trackers.filter { tracker -> Bool in
-                return tracker.shedule == nil || tracker.shedule?.isEmpty == true
+                if let schedule = tracker.shedule, !schedule.isEmpty {
+                    let weekDay = Calendar.current.component(.weekday, from: currentDate)
+                    var day = ""
+
+                    switch weekDay {
+                    case 1:
+                        day = "Вс"
+                    case 2:
+                        day = "Пн"
+                    case 3:
+                        day = "Вт"
+                    case 4:
+                        day = "Ср"
+                    case 5:
+                        day = "Чт"
+                    case 6:
+                        day = "Пт"
+                    case 7:
+                        day = "Сб"
+                    default:
+                        break
+                    }
+                    return schedule.contains { $0 == day }
+                } else {
+                    return true
+                }
             }
             return TrackerCategory(title: category.title, trackers: filteredTrackers)
         }
-        
+
         visibleCategories = visibleCategories.filter { !$0.trackers.isEmpty }
-        
+
         showBackgroundView(forCollection: true)
     }
-    
+
+
     private func isCompletedTracker() {
         visibleCategories.forEach { category in
             category.trackers.forEach { tracker in
@@ -258,7 +241,7 @@ class TrackersViewController: UIViewController, TrackerViewControllerDelegate {
             print("failed create tracker")
         }
         
-        loadDataFromCoreData()
+        showVisibleCategories()
     }
     // MARK: - Context Menu
     private func makeContextMenuForItemAt(indexPath: IndexPath, collectionView: UICollectionView) -> UIMenu {
@@ -347,7 +330,7 @@ extension TrackersViewController: UICollectionViewDataSource {
             for: indexPath
         ) as? TrackerCell else { return UICollectionViewCell()}
         
-        let tracker = categories[indexPath.section].trackers[indexPath.row]
+        let tracker = visibleCategories[indexPath.section].trackers[indexPath.row]
         let daysCount = completedTrackers.filter { $0.id == tracker.id }.count
         
         let cellCompleted = isCompleteSelectedTracker[tracker.id] ?? false
@@ -457,7 +440,7 @@ extension TrackersViewController: UITextFieldDelegate {
         let updatedString = nsString?.replacingCharacters(in: range, with: string)
         
         guard let searchText = updatedString, !searchText.isEmpty else {
-            loadDataFromCoreData()
+            showVisibleCategories()
             return true
         }
         filterCategories(with: searchText)
@@ -465,7 +448,8 @@ extension TrackersViewController: UITextFieldDelegate {
     }
     
     func textFieldShouldClear(_ textField: UITextField) -> Bool {
-        loadDataFromCoreData()
+        showVisibleCategories()
+        showBackgroundView(forCollection: true)
         return true
     }
     
