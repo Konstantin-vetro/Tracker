@@ -33,7 +33,7 @@ final class NewTrackerViewController: UIViewController {
     }()
     
     private lazy var tableView: UITableView = {
-        let tableView = UITableView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 200),
+        let tableView = UITableView(frame: CGRect(x: 0, y: 0, width: .zero, height: .zero),
                                     style: .insetGrouped)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.register(SubtitledTableViewCell.self, forCellReuseIdentifier: "cell")
@@ -58,6 +58,7 @@ final class NewTrackerViewController: UIViewController {
         button.layer.cornerRadius = 16
         button.layer.masksToBounds = true
         button.addTarget(self, action: #selector(exitView), for: .touchUpInside)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         return button
     }()
     
@@ -69,6 +70,7 @@ final class NewTrackerViewController: UIViewController {
         button.layer.cornerRadius = 16
         button.layer.masksToBounds = true
         button.addTarget(self, action: #selector(createNewTracker), for: .touchUpInside)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         button.isEnabled = false
         return button
     }()
@@ -114,16 +116,15 @@ final class NewTrackerViewController: UIViewController {
     }()
     
     // MARK: - Properties
-    private var labelBetweenTextFieldAndTableContraint: NSLayoutConstraint!
-    
-    private var collectionViewHeightContraint: NSLayoutConstraint!
+    private var labelBetweenTextFieldAndTableContraint: NSLayoutConstraint = NSLayoutConstraint()
+    private var tableViewHeightContraint: NSLayoutConstraint = NSLayoutConstraint()
+    private var collectionViewHeightContraint: NSLayoutConstraint = NSLayoutConstraint()
     
     var chooseIrregularEvent: Bool = false
     
     private let namesButton: [String] = ["Категория", "Расписание"]
     
     private var detailTextCategory: String?
-    
     private var detailTextDays: [String]?
     
     private let emojies = [
@@ -135,7 +136,6 @@ final class NewTrackerViewController: UIViewController {
     private let colors: [UIColor] = UIColor.colorSelection
     
     private var isSelectedEmoji: IndexPath?
-    
     private var isSelectedColor: IndexPath?
     
     var onTrackerCreated: ((_ tracker: Tracker, _ titleCategory: String?) -> Void)?
@@ -190,8 +190,7 @@ final class NewTrackerViewController: UIViewController {
             constant: 0
         )
         
-        let tableViewHeightContraint = tableView.heightAnchor.constraint(equalToConstant: 0)
-        tableViewHeightContraint.constant = tableView.contentSize.height
+        tableViewHeightContraint = tableView.heightAnchor.constraint(equalToConstant: tableView.contentSize.height)
         collectionViewHeightContraint = collectionView.heightAnchor.constraint(equalToConstant: 0)
         
         // MARK: - Layouts
@@ -213,14 +212,16 @@ final class NewTrackerViewController: UIViewController {
             scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            contentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
             textField.heightAnchor.constraint(equalToConstant: 75),
             textField.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 24),
-            textField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            textField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            textField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            textField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
             labelBetweenTextFieldAndTableContraint,
             
@@ -233,7 +234,7 @@ final class NewTrackerViewController: UIViewController {
             tableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             
             collectionViewHeightContraint,
-            collectionView.topAnchor.constraint(equalTo: tableView.bottomAnchor),
+            collectionView.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 0),
             collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             
@@ -250,6 +251,35 @@ final class NewTrackerViewController: UIViewController {
         collectionView.layoutIfNeeded()
         collectionViewHeightContraint.constant = collectionView.contentSize.height
     }
+    
+    private func setupCreateButton() {
+        guard let isSelectedEmoji = isSelectedEmoji,
+              let isSelectedColor = isSelectedColor
+        else { return }
+
+        let checkAllFields = textField.hasText
+            && detailTextCategory != nil
+            && !isSelectedEmoji.isEmpty
+            && !isSelectedColor.isEmpty
+
+        if !chooseIrregularEvent {
+            if checkAllFields && detailTextDays != nil {
+                createButton.backgroundColor = .BlackDay
+                createButton.isEnabled = true
+            } else {
+                createButton.backgroundColor = .Gray
+                createButton.isEnabled = false
+            }
+        } else {
+            if checkAllFields {
+                createButton.backgroundColor = .BlackDay
+                createButton.isEnabled = true
+            } else {
+                createButton.backgroundColor = .Gray
+                createButton.isEnabled = false
+            }
+        }
+    }
 }
 // MARK: - UITextFieldDelegate
 extension NewTrackerViewController: UITextFieldDelegate {
@@ -257,11 +287,12 @@ extension NewTrackerViewController: UITextFieldDelegate {
         guard let text = textField.text else { return }
         if text.count > 38 {
             messageLabel.isHidden = false
-            labelBetweenTextFieldAndTableContraint?.constant = -35
+            labelBetweenTextFieldAndTableContraint.constant = -35
         } else {
             messageLabel.isHidden = true
-            labelBetweenTextFieldAndTableContraint?.constant = 0
+            labelBetweenTextFieldAndTableContraint.constant = 0
         }
+        setupCreateButton()
         view.layoutIfNeeded()
     }
     
@@ -388,6 +419,7 @@ extension NewTrackerViewController: UICollectionViewDelegate, UICollectionViewDe
             cell?.layer.cornerRadius = 10
             cell?.backgroundColor = .LightGray
             isSelectedEmoji = indexPath
+            setupCreateButton()
         } else if indexPath.section == 1 {
             if let selectedCell = isSelectedColor {
                 let cell = collectionView.cellForItem(at: selectedCell)
@@ -395,12 +427,14 @@ extension NewTrackerViewController: UICollectionViewDelegate, UICollectionViewDe
                 cell?.layer.borderColor = .none
             }
             let cell = collectionView.cellForItem(at: indexPath)
+            let transparentColors = colors.map { $0.withAlphaComponent(0.3) }
+            let bordedColor = transparentColors[indexPath.row]
+            
             cell?.layer.cornerRadius = 10
             cell?.layer.borderWidth = 3
-            cell?.layer.borderColor = UIColor.systemGreen.cgColor
+            cell?.layer.borderColor = bordedColor.cgColor
             isSelectedColor = indexPath
-            createButton.backgroundColor = .BlackDay
-            createButton.isEnabled = true
+            setupCreateButton()
         }
     }
     // MARK: - UICollectionViewDelegateFlowLayout
@@ -466,10 +500,12 @@ extension NewTrackerViewController: HabitDelegate {
     func addDetailCategory(_ text: String) {
         detailTextCategory = text
         tableView.reloadData()
+        setupCreateButton()
     }
     
     func addDetailDays(_ days: [String]) {
         detailTextDays = days
         tableView.reloadData()
+        setupCreateButton()
     }
 }

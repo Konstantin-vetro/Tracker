@@ -22,6 +22,8 @@ extension UIColor {
     
     static var defaultColor: UIColor { UIColor(named: "defaultColor") ?? UIColor.white}
     
+    static var borderColor: UIColor { UIColor(named: "borderColor") ?? UIColor.green}
+    
     static let colorSelection: [UIColor] = [
         UIColor(named: "Color selection 1") ?? .red,
         UIColor(named: "Color selection 2") ?? .orange,

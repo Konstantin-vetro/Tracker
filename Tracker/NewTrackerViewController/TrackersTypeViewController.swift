@@ -10,6 +10,7 @@ final class TrackersTypeViewController: UIViewController {
         let button = UIButton()
         button.setTitle("Привычка", for: .normal)
         button.addTarget(self, action: #selector(addNewHabit), for: .touchUpInside)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         return button
     }()
     
@@ -17,6 +18,7 @@ final class TrackersTypeViewController: UIViewController {
         let button = UIButton()
         button.setTitle("Нерегулярное событие", for: .normal)
         button.addTarget(self, action: #selector(addIreggularEvent), for: .touchUpInside)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         return button
     }()
     
@@ -59,7 +61,7 @@ final class TrackersTypeViewController: UIViewController {
         habitViewController.title = "Новая привычка"
         habitViewController.onTrackerCreated = { [weak self] tracker, titleCategory in
             guard let self = self else { return }
-            self.delegate?.createTracker(tracker, titleCategory: titleCategory)
+            self.delegate?.createTracker(tracker, titleCategory: titleCategory ?? "")
         }
         
         let navigationController = UINavigationController(rootViewController: habitViewController)
@@ -74,7 +76,7 @@ final class TrackersTypeViewController: UIViewController {
         eventViewController.title = "Новое нерегулярное событие"
         eventViewController.onTrackerCreated = { [weak self] (tracker, titleCategory) in
             guard let self = self else { return }
-            self.delegate?.createTracker(tracker, titleCategory: titleCategory)
+            self.delegate?.createTracker(tracker, titleCategory: titleCategory ?? "")
         }
         eventViewController.chooseIrregularEvent = true
         
