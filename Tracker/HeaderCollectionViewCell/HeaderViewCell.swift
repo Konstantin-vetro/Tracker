@@ -13,7 +13,7 @@ final class HeaderViewCell: UICollectionReusableView {
         return label
     }()
     
-    private var heightConstraint: NSLayoutConstraint!
+    private var heightConstraint: NSLayoutConstraint = NSLayoutConstraint()
     
     override init(frame: CGRect) {
         super.init(frame: frame)

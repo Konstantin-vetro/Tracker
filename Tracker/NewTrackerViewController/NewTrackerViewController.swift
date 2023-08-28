@@ -116,18 +116,15 @@ final class NewTrackerViewController: UIViewController {
     }()
     
     // MARK: - Properties
-    private var labelBetweenTextFieldAndTableContraint: NSLayoutConstraint!
-    
-    private var tableViewHeightContraint: NSLayoutConstraint!
-    
-    private var collectionViewHeightContraint: NSLayoutConstraint!
+    private var labelBetweenTextFieldAndTableContraint: NSLayoutConstraint = NSLayoutConstraint()
+    private var tableViewHeightContraint: NSLayoutConstraint = NSLayoutConstraint()
+    private var collectionViewHeightContraint: NSLayoutConstraint = NSLayoutConstraint()
     
     var chooseIrregularEvent: Bool = false
     
     private let namesButton: [String] = ["Категория", "Расписание"]
     
     private var detailTextCategory: String?
-    
     private var detailTextDays: [String]?
     
     private let emojies = [
@@ -139,7 +136,6 @@ final class NewTrackerViewController: UIViewController {
     private let colors: [UIColor] = UIColor.colorSelection
     
     private var isSelectedEmoji: IndexPath?
-    
     private var isSelectedColor: IndexPath?
     
     var onTrackerCreated: ((_ tracker: Tracker, _ titleCategory: String?) -> Void)?
@@ -255,6 +251,35 @@ final class NewTrackerViewController: UIViewController {
         collectionView.layoutIfNeeded()
         collectionViewHeightContraint.constant = collectionView.contentSize.height
     }
+    
+    private func setupCreateButton() {
+        guard let isSelectedEmoji = isSelectedEmoji,
+              let isSelectedColor = isSelectedColor
+        else { return }
+
+        let checkAllFields = textField.hasText
+            && detailTextCategory != nil
+            && !isSelectedEmoji.isEmpty
+            && !isSelectedColor.isEmpty
+
+        if !chooseIrregularEvent {
+            if checkAllFields && detailTextDays != nil {
+                createButton.backgroundColor = .BlackDay
+                createButton.isEnabled = true
+            } else {
+                createButton.backgroundColor = .Gray
+                createButton.isEnabled = false
+            }
+        } else {
+            if checkAllFields {
+                createButton.backgroundColor = .BlackDay
+                createButton.isEnabled = true
+            } else {
+                createButton.backgroundColor = .Gray
+                createButton.isEnabled = false
+            }
+        }
+    }
 }
 // MARK: - UITextFieldDelegate
 extension NewTrackerViewController: UITextFieldDelegate {
@@ -262,11 +287,12 @@ extension NewTrackerViewController: UITextFieldDelegate {
         guard let text = textField.text else { return }
         if text.count > 38 {
             messageLabel.isHidden = false
-            labelBetweenTextFieldAndTableContraint?.constant = -35
+            labelBetweenTextFieldAndTableContraint.constant = -35
         } else {
             messageLabel.isHidden = true
-            labelBetweenTextFieldAndTableContraint?.constant = 0
+            labelBetweenTextFieldAndTableContraint.constant = 0
         }
+        setupCreateButton()
         view.layoutIfNeeded()
     }
     
@@ -393,6 +419,7 @@ extension NewTrackerViewController: UICollectionViewDelegate, UICollectionViewDe
             cell?.layer.cornerRadius = 10
             cell?.backgroundColor = .LightGray
             isSelectedEmoji = indexPath
+            setupCreateButton()
         } else if indexPath.section == 1 {
             if let selectedCell = isSelectedColor {
                 let cell = collectionView.cellForItem(at: selectedCell)
@@ -407,8 +434,7 @@ extension NewTrackerViewController: UICollectionViewDelegate, UICollectionViewDe
             cell?.layer.borderWidth = 3
             cell?.layer.borderColor = bordedColor.cgColor
             isSelectedColor = indexPath
-            createButton.backgroundColor = .BlackDay
-            createButton.isEnabled = true
+            setupCreateButton()
         }
     }
     // MARK: - UICollectionViewDelegateFlowLayout
@@ -474,10 +500,12 @@ extension NewTrackerViewController: HabitDelegate {
     func addDetailCategory(_ text: String) {
         detailTextCategory = text
         tableView.reloadData()
+        setupCreateButton()
     }
     
     func addDetailDays(_ days: [String]) {
         detailTextDays = days
         tableView.reloadData()
+        setupCreateButton()
     }
 }

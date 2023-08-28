@@ -164,29 +164,8 @@ class TrackersViewController: UIViewController, TrackerViewControllerDelegate {
 
         visibleCategories = categories.map { category -> TrackerCategory in
             let filteredTrackers = category.trackers.filter { tracker -> Bool in
-                if let schedule = tracker.shedule, !schedule.isEmpty {
-                    let weekDay = Calendar.current.component(.weekday, from: currentDate)
-                    var day = ""
-
-                    switch weekDay {
-                    case 1:
-                        day = "Вс"
-                    case 2:
-                        day = "Пн"
-                    case 3:
-                        day = "Вт"
-                    case 4:
-                        day = "Ср"
-                    case 5:
-                        day = "Чт"
-                    case 6:
-                        day = "Пт"
-                    case 7:
-                        day = "Сб"
-                    default:
-                        break
-                    }
-                    return schedule.contains { $0 == day }
+                if  let shedule = tracker.shedule, !shedule.isEmpty {
+                    return shedule.contains { $0 == getADay() }
                 } else {
                     return true
                 }
@@ -198,7 +177,31 @@ class TrackersViewController: UIViewController, TrackerViewControllerDelegate {
 
         showBackgroundView(forCollection: true)
     }
+    
+    private func getADay() -> String {
+        let weekDay = Calendar.current.component(.weekday, from: currentDate)
+        var day = ""
 
+        switch weekDay {
+        case 1:
+            day = "Вс"
+        case 2:
+            day = "Пн"
+        case 3:
+            day = "Вт"
+        case 4:
+            day = "Ср"
+        case 5:
+            day = "Чт"
+        case 6:
+            day = "Пт"
+        case 7:
+            day = "Сб"
+        default:
+            break
+        }
+        return day
+    }
 
     private func isCompletedTracker() {
         visibleCategories.forEach { category in
@@ -234,7 +237,7 @@ class TrackersViewController: UIViewController, TrackerViewControllerDelegate {
     
     func createTracker(_ tracker: Tracker?, titleCategory: String?) {
         guard let newTracker = tracker, let titleCategory = titleCategory else { return }
-        
+        // TODO: Доделать в будущем проверку на дублирование трекера
         do {
             try trackerCategoryStore.createTrackerWithCategory(tracker: newTracker, with: titleCategory)
         } catch {
@@ -456,17 +459,23 @@ extension TrackersViewController: UITextFieldDelegate {
     private func filterCategories(with searchText: String) {
         visibleCategories = categories.map { category -> TrackerCategory in
             let filteredTrackers = category.trackers.filter { tracker -> Bool in
-                return tracker.name.lowercased().contains(searchText.lowercased())
+                let isNameMatching = tracker.name.lowercased().contains(searchText.lowercased())
+
+                if let schedule = tracker.shedule, !schedule.isEmpty {
+                    return isNameMatching && schedule.contains { $0 == getADay() }
+                } else {
+                    return isNameMatching
+                }
             }
             
             let filteredCategory = TrackerCategory(title: category.title, trackers: filteredTrackers)
             
             return filteredCategory
-        }.filter { $0.trackers.count > 0}
+        }.filter { $0.trackers.count > 0 }
         
         showBackgroundView(forCollection: false)
     }
-    
+
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
