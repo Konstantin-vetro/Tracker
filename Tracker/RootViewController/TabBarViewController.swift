@@ -6,10 +6,8 @@
 import UIKit
 
 final class TabBarViewController: UITabBarController {
-    
-    let trackersViewController = UINavigationController(rootViewController: TrackersViewController())
-    
-    let statisticViewController = UINavigationController(rootViewController: StatisticViewController())
+    private let trackersViewController = UINavigationController(rootViewController: TrackersViewController())
+    private let statisticViewController = UINavigationController(rootViewController: StatisticViewController())
     
     override func viewDidLoad() {
         super.viewDidLoad()

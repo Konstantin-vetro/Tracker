@@ -66,7 +66,6 @@ class TrackersViewController: UIViewController, TrackerViewControllerDelegate {
     
     var currentDate: Date { return datePicker.date }
     
-    private var filteredCategoriesByDate: [TrackerCategory] = []
     private var completedTrackers: Set<TrackerRecord> = []
     private var isCompleteSelectedTracker: [UUID: Bool] = [:]
     
@@ -140,7 +139,7 @@ class TrackersViewController: UIViewController, TrackerViewControllerDelegate {
                 filterButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
                 filterButton.bottomAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: -16),
                 filterButton.heightAnchor.constraint(equalToConstant: 50),
-                filterButton.widthAnchor.constraint(equalToConstant: 114),
+                filterButton.widthAnchor.constraint(equalToConstant: 114)
             ]
         )
     }
@@ -164,7 +163,7 @@ class TrackersViewController: UIViewController, TrackerViewControllerDelegate {
 
         visibleCategories = categories.map { category -> TrackerCategory in
             let filteredTrackers = category.trackers.filter { tracker -> Bool in
-                if  let shedule = tracker.shedule, !shedule.isEmpty {
+                if let shedule = tracker.shedule, !shedule.isEmpty {
                     return shedule.contains { $0 == getADay() }
                 } else {
                     return true
