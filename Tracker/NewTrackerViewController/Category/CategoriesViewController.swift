@@ -20,6 +20,8 @@ final class CategoriesViewController: UIViewController {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "categoryCell")
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         tableView.backgroundColor = .white
+        tableView.dataSource = self
+        tableView.delegate = self
         return tableView
     }()
     
@@ -34,24 +36,10 @@ final class CategoriesViewController: UIViewController {
         return button
     }()
     
-    let userDefaults = UserDefaults.standard
+    private let userDefaults = UserDefaults.standard
+    private var viewModel: CategoriesViewModel
     
     weak var delegate: HabitDelegate?
-    
-    private var categories: [String] {
-        get {
-            if let savedData = UserDefaults.standard.data(forKey: "categories"),
-               let loadedArray = try? JSONDecoder().decode([String].self, from: savedData) {
-                return loadedArray
-            } else {
-                return [String]()
-            }
-        } set {
-            let newData = try? JSONEncoder().encode(newValue)
-            UserDefaults.standard.set(newData, forKey: "categories")
-            UserDefaults.standard.synchronize()
-        }
-    }
     
     private var editingIndexPath: IndexPath? {
         didSet {
@@ -60,6 +48,15 @@ final class CategoriesViewController: UIViewController {
             userDefaults.set(selectedRow, forKey: "editingIndexPath")
             userDefaults.synchronize()
         }
+    }
+    
+    init(viewModel: CategoriesViewModel = CategoriesViewModel()) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     // MARK: - LifeCycle
@@ -93,9 +90,6 @@ final class CategoriesViewController: UIViewController {
             addCategoryButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             addCategoryButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
         ])
-        
-        tableView.dataSource = self
-        tableView.delegate = self
     }
     // MARK: - Action
     @objc
@@ -116,7 +110,7 @@ final class CategoriesViewController: UIViewController {
     }
     
     private func updateTableView() {
-        if categories.isEmpty {
+        if viewModel.isEmpty() {
             guard let image = UIImage(named: "placeholderImage") else { return }
             let emptyView = EmptyView(frame: CGRect(
                 x: 0,
@@ -136,16 +130,16 @@ final class CategoriesViewController: UIViewController {
 
 extension CategoriesViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 75
+        return viewModel.heightForRowAt(indexPath: indexPath)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return categories.count
+        return viewModel.numberOfRows()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "categoryCell", for: indexPath)
-        cell.textLabel?.text = categories[indexPath.row]
+        cell.textLabel?.text = viewModel.categoryTitle(for: indexPath)
         cell.backgroundColor = .defaultColor
         cell.accessoryType = indexPath == editingIndexPath ? .checkmark : .none
         return cell
@@ -155,7 +149,7 @@ extension CategoriesViewController: UITableViewDataSource {
                    commit editingStyle: UITableViewCell.EditingStyle,
                    forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            categories.remove(at: indexPath.row)
+            viewModel.deleteCategory(at: indexPath)
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
     }
@@ -171,7 +165,7 @@ extension CategoriesViewController: UITableViewDelegate {
         cell?.accessoryType = .checkmark
         editingIndexPath = indexPath
         
-        delegate?.addDetailCategory(categories[indexPath.row])
+        delegate?.addDetailCategory(viewModel.categories[indexPath.row])
         tableView.deselectRow(at: indexPath, animated: true)
         dismiss(animated: true)
     }
@@ -187,14 +181,14 @@ extension CategoriesViewController: UITableViewDelegate {
             guard let self = self else { return }
             
             if let editingIndexPath = self.editingIndexPath {
-                let editText = self.categories[editingIndexPath.row]
+                let editText = self.viewModel.categories[editingIndexPath.row]
                 self.goToAddNewCategory(isEdit: true, text: editText)
             }
         }
         
         let deleteAction = UIAction(title: "Удалить", attributes: .destructive) { [weak self] _ in
             guard let self = self else { return }
-            self.categories.remove(at: indexPath.row)
+            self.viewModel.deleteCategory(at: indexPath)
             self.updateTableView()
         }
         
@@ -208,13 +202,13 @@ extension CategoriesViewController: UITableViewDelegate {
 extension CategoriesViewController: AddNewСategoryViewControllerDelegate {
     func editCategory(_ editText: String) {
         if let editingIndexPath = editingIndexPath {
-            categories[editingIndexPath.row] = editText
+            viewModel.editCategory(at: editingIndexPath, with: editText)
             tableView.reloadRows(at: [editingIndexPath], with: .automatic)
         }
     }
     
     func addCategory(_ text: String) {
-        categories.append(text)
+        viewModel.addCategory(text)
         updateTableView()
     }
 }
