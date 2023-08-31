@@ -37,7 +37,7 @@ final class CategoriesViewController: UIViewController {
     }()
     
     private let userDefaults = UserDefaults.standard
-    private var viewModel: CategoriesViewModel
+    private var viewModel: CategoriesViewModelProtocol
     
     weak var delegate: HabitDelegate?
     
@@ -50,7 +50,7 @@ final class CategoriesViewController: UIViewController {
         }
     }
     
-    init(viewModel: CategoriesViewModel = CategoriesViewModel()) {
+    init(viewModel: CategoriesViewModelProtocol = CategoriesViewModel()) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -67,7 +67,7 @@ final class CategoriesViewController: UIViewController {
             editingIndexPath = IndexPath(row: savedRow, section: 0)
         }
         setupViews()
-        updateTableView()
+        updateTableView(forTable: true)
     }
     
     // MARK: - Layouts
@@ -109,15 +109,14 @@ final class CategoriesViewController: UIViewController {
         present(navigationController, animated: true)
     }
     
-    private func updateTableView() {
+    private func updateTableView(forTable: Bool) {
         if viewModel.isEmpty() {
-            guard let image = UIImage(named: "placeholderImage") else { return }
             let emptyView = EmptyView(frame: CGRect(
                 x: 0,
                 y: 0,
                 width: view.bounds.width,
                 height: view.bounds.height),
-                                      image: image,
+                                      useImage: forTable,
                                       text: "Привычки и события можно\nобъединить по смыслу")
             tableView.backgroundView = emptyView
         } else {
@@ -130,11 +129,11 @@ final class CategoriesViewController: UIViewController {
 
 extension CategoriesViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return viewModel.heightForRowAt(indexPath: indexPath)
+        return 75
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.numberOfRows()
+        return viewModel.categoriesCount()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -165,7 +164,7 @@ extension CategoriesViewController: UITableViewDelegate {
         cell?.accessoryType = .checkmark
         editingIndexPath = indexPath
         
-        delegate?.addDetailCategory(viewModel.categories[indexPath.row])
+        delegate?.addDetailCategory(viewModel.categories[indexPath.row].title)
         tableView.deselectRow(at: indexPath, animated: true)
         dismiss(animated: true)
     }
@@ -181,7 +180,7 @@ extension CategoriesViewController: UITableViewDelegate {
             guard let self = self else { return }
             
             if let editingIndexPath = self.editingIndexPath {
-                let editText = self.viewModel.categories[editingIndexPath.row]
+                let editText = self.viewModel.categories[editingIndexPath.row].title
                 self.goToAddNewCategory(isEdit: true, text: editText)
             }
         }
@@ -189,7 +188,7 @@ extension CategoriesViewController: UITableViewDelegate {
         let deleteAction = UIAction(title: "Удалить", attributes: .destructive) { [weak self] _ in
             guard let self = self else { return }
             self.viewModel.deleteCategory(at: indexPath)
-            self.updateTableView()
+            self.updateTableView(forTable: true)
         }
         
         let menu = UIMenu(title: "", children: [editAction, deleteAction])
@@ -209,6 +208,6 @@ extension CategoriesViewController: AddNewСategoryViewControllerDelegate {
     
     func addCategory(_ text: String) {
         viewModel.addCategory(text)
-        updateTableView()
+        updateTableView(forTable: true)
     }
 }

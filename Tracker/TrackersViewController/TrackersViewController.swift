@@ -77,6 +77,7 @@ class TrackersViewController: UIViewController, TrackerViewControllerDelegate {
         super.viewDidLoad()
         categories = trackerCategoryStore.categories
         completedTrackers = trackerRecordStore.records
+        hideKeyboardWhenTappedAround()
         setupNavigationBar()
         setupView()
         showVisibleCategories()
@@ -214,16 +215,12 @@ class TrackersViewController: UIViewController, TrackerViewControllerDelegate {
     }
     
     private func showBackgroundView(forCollection: Bool) {
-        guard let imageCollection = UIImage(named: "placeholderImage") else { return }
-        guard let imageFoundTrackers = UIImage(named: "noFound") else { return }
-        
         if visibleCategories.isEmpty {
             let emptyView = EmptyView(frame: CGRect(x: 0,
                                                     y: 0,
                                                     width: view.bounds.width,
                                                     height: view.bounds.height),
-                                      image: forCollection ? imageCollection : imageFoundTrackers,
-                                      text: forCollection ? "Что будем отслеживать?" : "Ничего не найдено")
+                                      useImage: forCollection)
             collectionView.backgroundView = emptyView
             filterButton.isHidden = true
         } else {

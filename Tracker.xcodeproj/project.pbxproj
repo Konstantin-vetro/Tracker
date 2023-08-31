@@ -35,7 +35,7 @@
 		069850EF2A92916A00E65068 /* WeekdaysMarshalling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069850EE2A92916A00E65068 /* WeekdaysMarshalling.swift */; };
 		069850F62A9E5C5F00E65068 /* OnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069850F52A9E5C5F00E65068 /* OnboardingPageViewController.swift */; };
 		069850F82A9FBA8D00E65068 /* CategoriesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069850F72A9FBA8C00E65068 /* CategoriesViewModel.swift */; };
-		069850FA2A9FD6CE00E65068 /* CategoryStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069850F92A9FD6CE00E65068 /* CategoryStorage.swift */; };
+		069850FE2AA1283100E65068 /* UIViewController+hideKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069850FD2AA1283100E65068 /* UIViewController+hideKeyboard.swift */; };
 		06E061562A76F207007007A9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E061552A76F207007007A9 /* AppDelegate.swift */; };
 		06E061582A76F207007007A9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E061572A76F207007007A9 /* SceneDelegate.swift */; };
 		06E0615A2A76F207007007A9 /* TrackersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E061592A76F207007007A9 /* TrackersViewController.swift */; };
@@ -74,7 +74,7 @@
 		069850EE2A92916A00E65068 /* WeekdaysMarshalling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekdaysMarshalling.swift; sourceTree = "<group>"; };
 		069850F52A9E5C5F00E65068 /* OnboardingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageViewController.swift; sourceTree = "<group>"; };
 		069850F72A9FBA8C00E65068 /* CategoriesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesViewModel.swift; sourceTree = "<group>"; };
-		069850F92A9FD6CE00E65068 /* CategoryStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryStorage.swift; sourceTree = "<group>"; };
+		069850FD2AA1283100E65068 /* UIViewController+hideKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+hideKeyboard.swift"; sourceTree = "<group>"; };
 		06E061522A76F207007007A9 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		06E061552A76F207007007A9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		06E061572A76F207007007A9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -129,6 +129,7 @@
 			children = (
 				061CBF142A7A7A4F00CB4ECB /* UIColor + extentions.swift */,
 				062A773E2A880C3A003C4F2D /* UIView + Extentions.swift */,
+				069850FD2AA1283100E65068 /* UIViewController+hideKeyboard.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -177,7 +178,6 @@
 				062A77312A7DBFA0003C4F2D /* AddNewCategoryViewController.swift */,
 				069850F72A9FBA8C00E65068 /* CategoriesViewModel.swift */,
 				062A772F2A7DB53F003C4F2D /* CategoriesViewController.swift */,
-				069850F92A9FD6CE00E65068 /* CategoryStorage.swift */,
 			);
 			path = Category;
 			sourceTree = "<group>";
@@ -354,7 +354,6 @@
 				06E0615A2A76F207007007A9 /* TrackersViewController.swift in Sources */,
 				069850F62A9E5C5F00E65068 /* OnboardingPageViewController.swift in Sources */,
 				061CBF0F2A7A71E500CB4ECB /* Tracker.swift in Sources */,
-				069850FA2A9FD6CE00E65068 /* CategoryStorage.swift in Sources */,
 				062A77432A8BDD34003C4F2D /* TrackerCategory.swift in Sources */,
 				06E0616C2A770026007007A9 /* HeaderViewCell.swift in Sources */,
 				06E061562A76F207007007A9 /* AppDelegate.swift in Sources */,
@@ -362,6 +361,7 @@
 				061CBF152A7A7A4F00CB4ECB /* UIColor + extentions.swift in Sources */,
 				061CBF172A7AC2EE00CB4ECB /* NewTrackerViewController.swift in Sources */,
 				061CBF0A2A79ACA800CB4ECB /* TabBarViewController.swift in Sources */,
+				069850FE2AA1283100E65068 /* UIViewController+hideKeyboard.swift in Sources */,
 				069850EB2A8FF0D600E65068 /* UIColorMarshalling.swift in Sources */,
 				062A77392A81AEB2003C4F2D /* MockTrackers.swift in Sources */,
 				062A774E2A8C0086003C4F2D /* FilterViewController.swift in Sources */,
