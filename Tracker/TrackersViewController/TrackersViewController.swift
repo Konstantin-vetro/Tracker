@@ -66,7 +66,6 @@ class TrackersViewController: UIViewController, TrackerViewControllerDelegate {
     
     var currentDate: Date { return datePicker.date }
     
-    private var filteredCategoriesByDate: [TrackerCategory] = []
     private var completedTrackers: Set<TrackerRecord> = []
     private var isCompleteSelectedTracker: [UUID: Bool] = [:]
     
@@ -78,6 +77,7 @@ class TrackersViewController: UIViewController, TrackerViewControllerDelegate {
         super.viewDidLoad()
         categories = trackerCategoryStore.categories
         completedTrackers = trackerRecordStore.records
+        hideKeyboardWhenTappedAround()
         setupNavigationBar()
         setupView()
         showVisibleCategories()
@@ -140,7 +140,7 @@ class TrackersViewController: UIViewController, TrackerViewControllerDelegate {
                 filterButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
                 filterButton.bottomAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: -16),
                 filterButton.heightAnchor.constraint(equalToConstant: 50),
-                filterButton.widthAnchor.constraint(equalToConstant: 114),
+                filterButton.widthAnchor.constraint(equalToConstant: 114)
             ]
         )
     }
@@ -164,7 +164,7 @@ class TrackersViewController: UIViewController, TrackerViewControllerDelegate {
 
         visibleCategories = categories.map { category -> TrackerCategory in
             let filteredTrackers = category.trackers.filter { tracker -> Bool in
-                if  let shedule = tracker.shedule, !shedule.isEmpty {
+                if let shedule = tracker.shedule, !shedule.isEmpty {
                     return shedule.contains { $0 == getADay() }
                 } else {
                     return true
@@ -215,16 +215,12 @@ class TrackersViewController: UIViewController, TrackerViewControllerDelegate {
     }
     
     private func showBackgroundView(forCollection: Bool) {
-        guard let imageCollection = UIImage(named: "placeholderImage") else { return }
-        guard let imageFoundTrackers = UIImage(named: "noFound") else { return }
-        
         if visibleCategories.isEmpty {
             let emptyView = EmptyView(frame: CGRect(x: 0,
                                                     y: 0,
                                                     width: view.bounds.width,
                                                     height: view.bounds.height),
-                                      image: forCollection ? imageCollection : imageFoundTrackers,
-                                      text: forCollection ? "Что будем отслеживать?" : "Ничего не найдено")
+                                      useImage: forCollection)
             collectionView.backgroundView = emptyView
             filterButton.isHidden = true
         } else {

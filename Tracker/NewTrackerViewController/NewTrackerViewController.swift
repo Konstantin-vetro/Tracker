@@ -146,7 +146,7 @@ final class NewTrackerViewController: UIViewController {
         if chooseIrregularEvent {
             textField.placeholder = "Введите название события"
         }
-        
+        hideKeyboardWhenTappedAround()
         setupViews()
         updateCollectionViewHeight()
     }

@@ -20,11 +20,18 @@ final class EmptyView: UIView {
         return label
     }()
     
-    init(frame: CGRect, image: UIImage, text: String) {
+    init(frame: CGRect, useImage: Bool, text: String? = nil) {
         super.init(frame: frame)
-        self.backgroundColor = .white
-        self.placeholderImage.image = image
-        self.textLabel.text = text
+        guard let imageCollection = UIImage(named: "placeholderImage") else { return }
+        guard let imageFoundTrackers = UIImage(named: "noFound") else { return }
+        
+        self.placeholderImage.image = useImage ? imageCollection : imageFoundTrackers
+        if text != nil {
+            self.textLabel.text = text
+        } else {
+            self.textLabel.text = useImage ? "Что будем отслеживать?" : "Ничего не найдено"
+        }
+        
         setupViews()
     }
     
@@ -39,13 +46,14 @@ final class EmptyView: UIView {
             addSubview($0)
         }
         
+        backgroundColor = .white
+        
         NSLayoutConstraint.activate([
             placeholderImage.centerXAnchor.constraint(equalTo: centerXAnchor),
             placeholderImage.centerYAnchor.constraint(equalTo: centerYAnchor),
             
             textLabel.topAnchor.constraint(equalTo: placeholderImage.bottomAnchor, constant:  8),
-            textLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            textLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
+            textLabel.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
     }
 }

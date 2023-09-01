@@ -20,6 +20,8 @@ final class CategoriesViewController: UIViewController {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "categoryCell")
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         tableView.backgroundColor = .white
+        tableView.dataSource = self
+        tableView.delegate = self
         return tableView
     }()
     
@@ -34,24 +36,10 @@ final class CategoriesViewController: UIViewController {
         return button
     }()
     
-    let userDefaults = UserDefaults.standard
+    private let userDefaults = UserDefaults.standard
+    private var viewModel: CategoriesViewModelProtocol
     
     weak var delegate: HabitDelegate?
-    
-    private var categories: [String] {
-        get {
-            if let savedData = UserDefaults.standard.data(forKey: "categories"),
-               let loadedArray = try? JSONDecoder().decode([String].self, from: savedData) {
-                return loadedArray
-            } else {
-                return [String]()
-            }
-        } set {
-            let newData = try? JSONEncoder().encode(newValue)
-            UserDefaults.standard.set(newData, forKey: "categories")
-            UserDefaults.standard.synchronize()
-        }
-    }
     
     private var editingIndexPath: IndexPath? {
         didSet {
@@ -62,6 +50,15 @@ final class CategoriesViewController: UIViewController {
         }
     }
     
+    init(viewModel: CategoriesViewModelProtocol = CategoriesViewModel()) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,7 +67,7 @@ final class CategoriesViewController: UIViewController {
             editingIndexPath = IndexPath(row: savedRow, section: 0)
         }
         setupViews()
-        updateTableView()
+        updateTableView(forTable: true)
     }
     
     // MARK: - Layouts
@@ -93,9 +90,6 @@ final class CategoriesViewController: UIViewController {
             addCategoryButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             addCategoryButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
         ])
-        
-        tableView.dataSource = self
-        tableView.delegate = self
     }
     // MARK: - Action
     @objc
@@ -115,15 +109,14 @@ final class CategoriesViewController: UIViewController {
         present(navigationController, animated: true)
     }
     
-    private func updateTableView() {
-        if categories.isEmpty {
-            guard let image = UIImage(named: "placeholderImage") else { return }
+    private func updateTableView(forTable: Bool) {
+        if viewModel.isEmpty() {
             let emptyView = EmptyView(frame: CGRect(
                 x: 0,
                 y: 0,
                 width: view.bounds.width,
                 height: view.bounds.height),
-                                      image: image,
+                                      useImage: forTable,
                                       text: "Привычки и события можно\nобъединить по смыслу")
             tableView.backgroundView = emptyView
         } else {
@@ -140,12 +133,12 @@ extension CategoriesViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return categories.count
+        return viewModel.categoriesCount()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "categoryCell", for: indexPath)
-        cell.textLabel?.text = categories[indexPath.row]
+        cell.textLabel?.text = viewModel.categoryTitle(for: indexPath)
         cell.backgroundColor = .defaultColor
         cell.accessoryType = indexPath == editingIndexPath ? .checkmark : .none
         return cell
@@ -155,7 +148,7 @@ extension CategoriesViewController: UITableViewDataSource {
                    commit editingStyle: UITableViewCell.EditingStyle,
                    forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            categories.remove(at: indexPath.row)
+            viewModel.deleteCategory(at: indexPath)
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
     }
@@ -171,7 +164,7 @@ extension CategoriesViewController: UITableViewDelegate {
         cell?.accessoryType = .checkmark
         editingIndexPath = indexPath
         
-        delegate?.addDetailCategory(categories[indexPath.row])
+        delegate?.addDetailCategory(viewModel.categories[indexPath.row].title)
         tableView.deselectRow(at: indexPath, animated: true)
         dismiss(animated: true)
     }
@@ -187,15 +180,15 @@ extension CategoriesViewController: UITableViewDelegate {
             guard let self = self else { return }
             
             if let editingIndexPath = self.editingIndexPath {
-                let editText = self.categories[editingIndexPath.row]
+                let editText = self.viewModel.categories[editingIndexPath.row].title
                 self.goToAddNewCategory(isEdit: true, text: editText)
             }
         }
         
         let deleteAction = UIAction(title: "Удалить", attributes: .destructive) { [weak self] _ in
             guard let self = self else { return }
-            self.categories.remove(at: indexPath.row)
-            self.updateTableView()
+            self.viewModel.deleteCategory(at: indexPath)
+            self.updateTableView(forTable: true)
         }
         
         let menu = UIMenu(title: "", children: [editAction, deleteAction])
@@ -208,13 +201,13 @@ extension CategoriesViewController: UITableViewDelegate {
 extension CategoriesViewController: AddNewСategoryViewControllerDelegate {
     func editCategory(_ editText: String) {
         if let editingIndexPath = editingIndexPath {
-            categories[editingIndexPath.row] = editText
+            viewModel.editCategory(at: editingIndexPath, with: editText)
             tableView.reloadRows(at: [editingIndexPath], with: .automatic)
         }
     }
     
     func addCategory(_ text: String) {
-        categories.append(text)
-        updateTableView()
+        viewModel.addCategory(text)
+        updateTableView(forTable: true)
     }
 }
