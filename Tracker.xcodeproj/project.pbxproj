@@ -36,6 +36,13 @@
 		069850F62A9E5C5F00E65068 /* OnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069850F52A9E5C5F00E65068 /* OnboardingPageViewController.swift */; };
 		069850F82A9FBA8D00E65068 /* CategoriesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069850F72A9FBA8C00E65068 /* CategoriesViewModel.swift */; };
 		069850FE2AA1283100E65068 /* UIViewController+hideKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069850FD2AA1283100E65068 /* UIViewController+hideKeyboard.swift */; };
+		069851012AAA533400E65068 /* FilterDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069851002AAA533300E65068 /* FilterDelegate.swift */; };
+		069851042AAA6A5C00E65068 /* TrackersViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069851032AAA6A5C00E65068 /* TrackersViewControllerDelegate.swift */; };
+		069851062AAA6A8D00E65068 /* TrackerCellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069851052AAA6A8D00E65068 /* TrackerCellDelegate.swift */; };
+		069851082AAA6ACA00E65068 /* SheduleViewCellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069851072AAA6ACA00E65068 /* SheduleViewCellDelegate.swift */; };
+		0698510A2AAA6B1F00E65068 /* CategoriesViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069851092AAA6B1F00E65068 /* CategoriesViewModelProtocol.swift */; };
+		0698510C2AAA6B7900E65068 /* AddNewViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0698510B2AAA6B7900E65068 /* AddNewViewControllerDelegate.swift */; };
+		0698510E2AAA6D1D00E65068 /* HabitDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0698510D2AAA6D1D00E65068 /* HabitDelegate.swift */; };
 		06E061562A76F207007007A9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E061552A76F207007007A9 /* AppDelegate.swift */; };
 		06E061582A76F207007007A9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E061572A76F207007007A9 /* SceneDelegate.swift */; };
 		06E0615A2A76F207007007A9 /* TrackersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E061592A76F207007007A9 /* TrackersViewController.swift */; };
@@ -75,6 +82,13 @@
 		069850F52A9E5C5F00E65068 /* OnboardingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageViewController.swift; sourceTree = "<group>"; };
 		069850F72A9FBA8C00E65068 /* CategoriesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesViewModel.swift; sourceTree = "<group>"; };
 		069850FD2AA1283100E65068 /* UIViewController+hideKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+hideKeyboard.swift"; sourceTree = "<group>"; };
+		069851002AAA533300E65068 /* FilterDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterDelegate.swift; sourceTree = "<group>"; };
+		069851032AAA6A5C00E65068 /* TrackersViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersViewControllerDelegate.swift; sourceTree = "<group>"; };
+		069851052AAA6A8D00E65068 /* TrackerCellDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCellDelegate.swift; sourceTree = "<group>"; };
+		069851072AAA6ACA00E65068 /* SheduleViewCellDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheduleViewCellDelegate.swift; sourceTree = "<group>"; };
+		069851092AAA6B1F00E65068 /* CategoriesViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesViewModelProtocol.swift; sourceTree = "<group>"; };
+		0698510B2AAA6B7900E65068 /* AddNewViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewViewControllerDelegate.swift; sourceTree = "<group>"; };
+		0698510D2AAA6D1D00E65068 /* HabitDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitDelegate.swift; sourceTree = "<group>"; };
 		06E061522A76F207007007A9 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		06E061552A76F207007007A9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		06E061572A76F207007007A9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -145,9 +159,11 @@
 		062A77462A8BF9BD003C4F2D /* TrackersViewController */ = {
 			isa = PBXGroup;
 			children = (
+				069851022AAA537000E65068 /* FilterViewController */,
 				062A773C2A842E0C003C4F2D /* TrackerCell.swift */,
+				069851052AAA6A8D00E65068 /* TrackerCellDelegate.swift */,
 				06E061592A76F207007007A9 /* TrackersViewController.swift */,
-				062A774D2A8C0086003C4F2D /* FilterViewController.swift */,
+				069851032AAA6A5C00E65068 /* TrackersViewControllerDelegate.swift */,
 			);
 			path = TrackersViewController;
 			sourceTree = "<group>";
@@ -165,6 +181,7 @@
 			children = (
 				061CBF112A7A748A00CB4ECB /* TrackersTypeViewController.swift */,
 				061CBF162A7AC2EE00CB4ECB /* NewTrackerViewController.swift */,
+				0698510D2AAA6D1D00E65068 /* HabitDelegate.swift */,
 				062A774A2A8BFAD0003C4F2D /* Cells */,
 				062A77492A8BFA74003C4F2D /* Category */,
 				062A774F2A8C1458003C4F2D /* Shedule */,
@@ -176,8 +193,10 @@
 			isa = PBXGroup;
 			children = (
 				062A77312A7DBFA0003C4F2D /* AddNewCategoryViewController.swift */,
-				069850F72A9FBA8C00E65068 /* CategoriesViewModel.swift */,
+				0698510B2AAA6B7900E65068 /* AddNewViewControllerDelegate.swift */,
 				062A772F2A7DB53F003C4F2D /* CategoriesViewController.swift */,
+				069850F72A9FBA8C00E65068 /* CategoriesViewModel.swift */,
+				069851092AAA6B1F00E65068 /* CategoriesViewModelProtocol.swift */,
 			);
 			path = Category;
 			sourceTree = "<group>";
@@ -197,6 +216,7 @@
 			children = (
 				066F76662A7C386F005DF841 /* SheduleViewCell.swift */,
 				066F76642A7C369D005DF841 /* SheduleViewController.swift */,
+				069851072AAA6ACA00E65068 /* SheduleViewCellDelegate.swift */,
 			);
 			path = Shedule;
 			sourceTree = "<group>";
@@ -228,6 +248,15 @@
 				069850F52A9E5C5F00E65068 /* OnboardingPageViewController.swift */,
 			);
 			path = OnboardingPageViewController;
+			sourceTree = "<group>";
+		};
+		069851022AAA537000E65068 /* FilterViewController */ = {
+			isa = PBXGroup;
+			children = (
+				062A774D2A8C0086003C4F2D /* FilterViewController.swift */,
+				069851002AAA533300E65068 /* FilterDelegate.swift */,
+			);
+			path = FilterViewController;
 			sourceTree = "<group>";
 		};
 		06E061492A76F207007007A9 = {
@@ -341,6 +370,7 @@
 			files = (
 				062A773D2A842E0C003C4F2D /* TrackerCell.swift in Sources */,
 				069850ED2A8FF44700E65068 /* TrackerCategoryStoreUpdate.swift in Sources */,
+				0698510A2AAA6B1F00E65068 /* CategoriesViewModelProtocol.swift in Sources */,
 				062A77322A7DBFA0003C4F2D /* AddNewCategoryViewController.swift in Sources */,
 				06E0616A2A76FBC9007007A9 /* EmojiCollectionViewCell.swift in Sources */,
 				069850EF2A92916A00E65068 /* WeekdaysMarshalling.swift in Sources */,
@@ -352,22 +382,28 @@
 				069850F82A9FBA8D00E65068 /* CategoriesViewModel.swift in Sources */,
 				061CBF0C2A79AED600CB4ECB /* StatisticViewController.swift in Sources */,
 				06E0615A2A76F207007007A9 /* TrackersViewController.swift in Sources */,
+				069851012AAA533400E65068 /* FilterDelegate.swift in Sources */,
 				069850F62A9E5C5F00E65068 /* OnboardingPageViewController.swift in Sources */,
 				061CBF0F2A7A71E500CB4ECB /* Tracker.swift in Sources */,
+				069851082AAA6ACA00E65068 /* SheduleViewCellDelegate.swift in Sources */,
+				0698510E2AAA6D1D00E65068 /* HabitDelegate.swift in Sources */,
 				062A77432A8BDD34003C4F2D /* TrackerCategory.swift in Sources */,
 				06E0616C2A770026007007A9 /* HeaderViewCell.swift in Sources */,
 				06E061562A76F207007007A9 /* AppDelegate.swift in Sources */,
 				069850E62A8FEC1100E65068 /* TrackerCategoryStore.swift in Sources */,
+				069851042AAA6A5C00E65068 /* TrackersViewControllerDelegate.swift in Sources */,
 				061CBF152A7A7A4F00CB4ECB /* UIColor + extentions.swift in Sources */,
 				061CBF172A7AC2EE00CB4ECB /* NewTrackerViewController.swift in Sources */,
 				061CBF0A2A79ACA800CB4ECB /* TabBarViewController.swift in Sources */,
 				069850FE2AA1283100E65068 /* UIViewController+hideKeyboard.swift in Sources */,
 				069850EB2A8FF0D600E65068 /* UIColorMarshalling.swift in Sources */,
+				069851062AAA6A8D00E65068 /* TrackerCellDelegate.swift in Sources */,
 				062A77392A81AEB2003C4F2D /* MockTrackers.swift in Sources */,
 				062A774E2A8C0086003C4F2D /* FilterViewController.swift in Sources */,
 				061CBF122A7A748A00CB4ECB /* TrackersTypeViewController.swift in Sources */,
 				061CBF192A7B158F00CB4ECB /* ColorsCollectionViewCell.swift in Sources */,
 				066F76672A7C386F005DF841 /* SheduleViewCell.swift in Sources */,
+				0698510C2AAA6B7900E65068 /* AddNewViewControllerDelegate.swift in Sources */,
 				069850E82A8FEC2400E65068 /* TrackerRecordStore.swift in Sources */,
 				062A77302A7DB53F003C4F2D /* CategoriesViewController.swift in Sources */,
 				069850E12A8FE5F800E65068 /* TrackerModel.xcdatamodeld in Sources */,

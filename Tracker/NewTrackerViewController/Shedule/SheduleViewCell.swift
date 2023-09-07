@@ -5,10 +5,6 @@
 
 import UIKit
 
-protocol SheduleViewCellDelegate: AnyObject {
-    func didToogleSwitch(for day: String, isOn: Bool)
-}
-
 final class SheduleViewCell: UITableViewCell {
     static let identifier = "sheduleCell"
     

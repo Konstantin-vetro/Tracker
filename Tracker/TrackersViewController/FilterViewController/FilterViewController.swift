@@ -11,7 +11,18 @@ final class FilterViewController: UIViewController {
         "Завершенные", "Не завершенные"
     ]
     
+    private let userDefaults = UserDefaults.standard
+    
     weak var delegate: FilterDelegate?
+    
+    private var editingIndex: IndexPath? {
+        didSet {
+            guard let indexPath = editingIndex else { return }
+            let selectedRow = indexPath.row
+            userDefaults.set(selectedRow, forKey: "editingIndex")
+            userDefaults.synchronize()
+        }
+    }
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: CGRect(x: 0,
@@ -30,6 +41,9 @@ final class FilterViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if let savedRow = userDefaults.object(forKey: "editingIndex") as? Int {
+            editingIndex = IndexPath(row: savedRow, section: 0)
+        }
         setupView()
     }
     
@@ -58,9 +72,7 @@ extension FilterViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "filterCell", for: indexPath)
         cell.textLabel?.text = filters[indexPath.row]
         cell.backgroundColor = .defaultColor
-        if indexPath.row == 0 {
-            cell.accessoryType = .checkmark
-        }
+        cell.accessoryType = indexPath == editingIndex ? .checkmark : .none
         return cell
     }
 }
@@ -70,10 +82,23 @@ extension FilterViewController: UITableViewDelegate {
         switch indexPath.row {
         case 0:
             delegate?.showAllTrackers()
-            dismiss(animated: true)
+        case 1:
+            delegate?.showTrackersForToday()
+        case 2:
+            delegate?.showCompletedTrackersForSelectedDay()
+        case 3:
+            delegate?.showUnCompletedTrackersForSelectedDay()
         default:
             break
         }
+        
+        if let editingIndex = editingIndex {
+            let previousSelectedCell = tableView.cellForRow(at: editingIndex)
+            previousSelectedCell?.accessoryType = .none
+        }
+        let cell = tableView.cellForRow(at: indexPath)
+        cell?.accessoryType = .checkmark
+        editingIndex = indexPath
         
         tableView.deselectRow(at: indexPath, animated: true)
         dismiss(animated: true)

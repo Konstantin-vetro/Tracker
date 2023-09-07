@@ -5,11 +5,6 @@
 
 import UIKit
 
-protocol AddNewСategoryViewControllerDelegate: AnyObject {
-    func editCategory(_ editText: String)
-    func addCategory(_ text: String)
-}
-
 final class CategoriesViewController: UIViewController {
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: CGRect(x: 0,

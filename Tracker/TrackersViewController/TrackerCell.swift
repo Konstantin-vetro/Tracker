@@ -5,10 +5,6 @@
 
 import UIKit
 
-protocol TrackerCellDelegate: AnyObject {
-    func updateTrackerRecord(on cell: TrackerCell)
-}
-
 final class TrackerCell: UICollectionViewCell {
     static let identifier = "TrackerCell"
     
@@ -125,7 +121,7 @@ final class TrackerCell: UICollectionViewCell {
         completeButton.backgroundColor = tracker.color
     }
     
-    func updateTracker(days: Int, isCompleted: Bool) {
+    func updateRecord(days: Int, isCompleted: Bool) {
         updateButton(isCompleted: isCompleted)
         updateCounterText(days: days)
     }
