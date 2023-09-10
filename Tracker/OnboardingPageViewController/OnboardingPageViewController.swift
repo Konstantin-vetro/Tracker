@@ -9,6 +9,8 @@ final class OnboardingPageViewController: UIViewController {
     private let blueImage = UIImage(named: "OnboardingBlue")
     private let redImage = UIImage(named: "OnboardingRed")
     private let userDefaults = UserDefaults.standard
+    private let blueScreen = NSLocalizedString("BlueScreen", comment: "")
+    private let redScreen = NSLocalizedString("RedScreen", comment: "")
     
     private lazy var blueImageView: UIImageView = {
         let view = UIImageView(image: blueImage)
@@ -46,7 +48,7 @@ final class OnboardingPageViewController: UIViewController {
     
     private lazy var nextButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Вот это технологии!", for: .normal)
+        button.setTitle(NSLocalizedString("OnboardingButton", comment: ""), for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         button.layer.cornerRadius = 16
@@ -62,7 +64,7 @@ final class OnboardingPageViewController: UIViewController {
         label.textColor = .BlackDay
         label.textAlignment = .center
         label.numberOfLines = 2
-        label.text = "Отслеживайте только\nто, что хотите"
+        label.text = blueScreen
         return label
     }()
     
@@ -129,10 +131,10 @@ extension OnboardingPageViewController: UIPageViewControllerDataSource {
         
         let previousIndex = viewControllerIndex - 1
         if previousIndex < 0 {
-            textLabel.text = "Отслеживайте только\nто, что хотите"
+            textLabel.text = blueScreen
             return pages.last
         } else {
-            textLabel.text = "Даже если это\nне литры воды и йога"
+            textLabel.text = redScreen
             return pages[previousIndex]
         }
     }
@@ -145,10 +147,10 @@ extension OnboardingPageViewController: UIPageViewControllerDataSource {
         
         let nextIndex = viewControllerIndex + 1
         if nextIndex >= pages.count {
-            textLabel.text = "Даже если это\nне литры воды и йога"
+            textLabel.text = redScreen
             return pages.first
         } else {
-            textLabel.text = "Отслеживайте только\nто, что хотите"
+            textLabel.text = blueScreen
             return pages[nextIndex]
         }
     }

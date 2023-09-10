@@ -21,7 +21,7 @@ final class SheduleViewController: UIViewController {
     
     private lazy var doneButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Готово", for: .normal)
+        button.setTitle(NSLocalizedString("Done", comment: ""), for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .BlackDay
         button.layer.cornerRadius = 16
@@ -33,8 +33,13 @@ final class SheduleViewController: UIViewController {
     weak var delegate: HabitDelegate?
     
     private let weekDays: [String] = [
-        "Понедельник", "Вторник", "Среда",
-        "Четверг", "Пятница", "Суббота", "Воскресенье"
+        NSLocalizedString("Monday", comment: ""),
+        NSLocalizedString("Tuesday", comment: ""),
+        NSLocalizedString("Wednesday", comment: ""),
+        NSLocalizedString("Thursday", comment: ""),
+        NSLocalizedString("Friday", comment: ""),
+        NSLocalizedString("Saturday", comment: ""),
+        NSLocalizedString("Sunday", comment: "")
     ]
     
     private var shedule: [String] = []

@@ -8,7 +8,8 @@ import UIKit
 final class TrackersTypeViewController: UIViewController {
     private lazy var habitButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Привычка", for: .normal)
+        let habit = NSLocalizedString("Habit", comment: "")
+        button.setTitle(habit, for: .normal)
         button.addTarget(self, action: #selector(addNewHabit), for: .touchUpInside)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         return button
@@ -16,7 +17,8 @@ final class TrackersTypeViewController: UIViewController {
     
     private lazy var irregularEventButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Нерегулярное событие", for: .normal)
+        let event = NSLocalizedString("IrregularEvent", comment: "")
+        button.setTitle(event, for: .normal)
         button.addTarget(self, action: #selector(addIreggularEvent), for: .touchUpInside)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         return button
@@ -58,7 +60,7 @@ final class TrackersTypeViewController: UIViewController {
     @objc
     private func addNewHabit() {
         let habitViewController = NewTrackerViewController()
-        habitViewController.title = "Новая привычка"
+        habitViewController.title = NSLocalizedString("NewHabit", comment: "")
         habitViewController.onTrackerCreated = { [weak self] tracker, titleCategory in
             guard let self = self else { return }
             self.delegate?.createTracker(tracker, category: titleCategory ?? "")
@@ -73,7 +75,7 @@ final class TrackersTypeViewController: UIViewController {
     @objc
     private func addIreggularEvent() {
         let eventViewController = NewTrackerViewController()
-        eventViewController.title = "Новое нерегулярное событие"
+        eventViewController.title = NSLocalizedString("NewEvent", comment: "")
         eventViewController.onTrackerCreated = { [weak self] (tracker, titleCategory) in
             guard let self = self else { return }
             self.delegate?.createTracker(tracker, category: titleCategory ?? "")

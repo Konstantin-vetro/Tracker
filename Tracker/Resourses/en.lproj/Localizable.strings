@@ -1,0 +1,64 @@
+//Заголовки
+"Trackers" = "Trackers";
+"Statistics" = "Statistics";
+"CreateTracker" = "Creating a tracker";
+"EditEvent" = "Editing an event";
+"EditHabit" = "Editing Habits";
+"NewCategory" = "New Category";
+"NewHabit" = "A new habit";
+"NewEvent" = "New Irregular event";
+"IrregularEvent" = "Irregular Event";
+"Filters" = "Filters";
+//Действия
+"Unpin" = "Unpin";
+"Pin" = "Pin";
+"Edit" = "Edit";
+"Delete" = "Delete";
+"ConfirmTracker" = "Are you sure you want to delete the tracker?";
+"Cancel" = "Cancel";
+//Разное
+"Fixed" = "Fixed";
+"Search" = "Search";
+//Фильтры
+"AllTrackers" = "All Trackers";
+"TrackersForToday" = "Trackers for today";
+"Completed" = "Completed";
+"Unfinished" = "Unfinished";
+//Кнопки
+"Habit" = "Habit";
+"Create" = "Create";
+"Category" = "Category";
+"Schedule" = "Schedule";
+"Save" = "Save";
+"Done" = "Done";
+"AddCategory" = "Add a category";
+//Headings
+"EnterTracker" = "Enter the name of the tracker";
+"EnterCategory" = "Enter the category punishment";
+"Limit" = "Limit of 38 characters";
+"Color" = "Color";
+//Дни недели
+"Monday" = "Monday";
+"Tuesday" = "Tuesday";
+"Wednesday" = "Wednesday";
+"Thursday" = "Thursday";
+"Friday" = "Friday";
+"Saturday" = "Saturday";
+"Sunday" = "Sunday";
+"EveryDay" = "Every day";
+"shortMonday" = "Mo";
+"shortTuesday" = "Tu";
+"shortWednesday" = "We";
+"shortThursday" = "Th";
+"shortFriday" = "Fr";
+"shortSaturday" = "Sa";
+"shortSunday" = "Su";
+//Заглушки
+"EmptyCategories" = "Habits and events can\n be combined in meaning";
+"EmptyCollection" = "What will we track?";
+"EmptyFound" = "Nothing found";
+"EmptyStatistics" = "There is nothing to analyze yet";
+//Onboarding
+"OnboardingButton" = "These are technologies!";
+"BlueScreen" = "Track only\nwhat you want";
+"RedScreen" = "Even if it is not\nliters of water and yoga";

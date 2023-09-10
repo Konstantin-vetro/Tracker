@@ -37,7 +37,7 @@ class TrackersViewController: UIViewController {
         textField.delegate = self
         textField.backgroundColor = .defaultColor
         textField.returnKeyType = .done
-        textField.placeholder = "Поиск"
+        textField.placeholder = NSLocalizedString("Search", comment: "")
         return textField
     }()
     
@@ -57,7 +57,7 @@ class TrackersViewController: UIViewController {
     
     private lazy var filterButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Фильтры", for: .normal)
+        button.setTitle(NSLocalizedString("Filters", comment: ""), for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .Blue
@@ -83,7 +83,7 @@ class TrackersViewController: UIViewController {
     @objc
     private func addTracker() {
         let trackersTypeViewController = TrackersTypeViewController()
-        trackersTypeViewController.title = "Создание трекера"
+        trackersTypeViewController.title = NSLocalizedString("CreateTracker", comment: "")
         trackersTypeViewController.delegate = self
         let navigationController = UINavigationController(rootViewController: trackersTypeViewController)
         navigationController.navigationBar.barTintColor = .white
@@ -94,7 +94,7 @@ class TrackersViewController: UIViewController {
     @objc
     private func addFilter() {
         let filterViewController = FilterViewController()
-        filterViewController.title = "Фильтры"
+        filterViewController.title = NSLocalizedString("Filters", comment: "")
         filterViewController.delegate = self
         let navigationController = UINavigationController(rootViewController: filterViewController)
         navigationController.navigationBar.barTintColor = .white
@@ -144,7 +144,7 @@ class TrackersViewController: UIViewController {
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTracker))
         addButton.tintColor = .black
         let date = UIBarButtonItem(customView: datePicker)
-        navigationItem.title = "Трекеры"
+        navigationItem.title = NSLocalizedString("Trackers", comment: "")
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.leftBarButtonItem = addButton
         navigationItem.rightBarButtonItem = date
@@ -157,7 +157,8 @@ class TrackersViewController: UIViewController {
         
         completedTrackers = trackerRecordStore.records
         
-        fixedCategory = TrackerCategory(title: "Закрепленные", trackers: fixedTrackers)
+        let fixed = NSLocalizedString("Fixed", comment: "")
+        fixedCategory = TrackerCategory(title: fixed, trackers: fixedTrackers)
         
         visibleCategories = categories.map { category -> TrackerCategory in
             let filteredTrackers = category.trackers.filter { tracker -> Bool in
@@ -262,7 +263,9 @@ class TrackersViewController: UIViewController {
     }
     
     private func makeFixAction(indexPath: IndexPath, isFixed: Bool) -> UIAction {
-        let fixTitle = isFixed ? "Открепить" : "Закрепить"
+        let pin = NSLocalizedString("Pin", comment: "")
+        let unPin = NSLocalizedString("Unpin", comment: "")
+        let fixTitle = isFixed ? unPin : pin
         return UIAction(title: fixTitle) { [weak self] _ in
             guard let self = self else { return }
             self.fixTracker(indexPath: indexPath, isFixed: isFixed)
@@ -285,7 +288,7 @@ class TrackersViewController: UIViewController {
     }
     // MARK: - Edit
     private func makeEditAction(indexPath: IndexPath) -> UIAction {
-        return UIAction(title: "Редактировать") { [weak self] _ in
+        return UIAction(title: NSLocalizedString("Edit", comment: "")) { [weak self] _ in
             guard let self = self else { return }
             self.editTracker(at: indexPath)
         }
@@ -299,10 +302,12 @@ class TrackersViewController: UIViewController {
         let editViewController = NewTrackerViewController()
         
         if tracker.shedule?.isEmpty == true {
-            editViewController.title = "Редактирование события"
+            let editEvent = NSLocalizedString("editEvent", comment: "")
+            editViewController.title = editEvent
             editViewController.chooseIrregularEvent = true
         } else {
-            editViewController.title = "Редактирование привычки"
+            let editHabit = NSLocalizedString("EditHabit", comment: "")
+            editViewController.title = editHabit
         }
         
         editViewController.isEdit = true
@@ -321,15 +326,17 @@ class TrackersViewController: UIViewController {
     }
     // MARK: - Delete
     private func makeDeleteAction(indexPath: IndexPath, collectionView: UICollectionView) -> UIAction {
-        return UIAction(title: "Удалить", attributes: .destructive) { [weak self] _ in
+        let confirmMessage = NSLocalizedString("ConfirmTracker", comment: "")
+        return UIAction(title: NSLocalizedString("Delete", comment: ""), attributes: .destructive) { [weak self] _ in
             guard let self = self else { return }
-            let alert = UIAlertController(title: "", message: "Уверены что хотите удалить трекер?", preferredStyle: .actionSheet)
-            let delete = UIAlertAction(title: "Удалить", style: .destructive) { [weak self] _ in
+            let alert = UIAlertController(title: "", message: confirmMessage, preferredStyle: .actionSheet)
+            let delete = UIAlertAction(title: NSLocalizedString("Delete", comment: ""),
+                                       style: .destructive) { [weak self] _ in
                 guard let self = self else { return }
                 self.deleteTracker(at: indexPath, in: collectionView)
             }
             
-            let cancel = UIAlertAction(title: "Отменить", style: .cancel)
+            let cancel = UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel)
             alert.addAction(delete)
             alert.addAction(cancel)
             

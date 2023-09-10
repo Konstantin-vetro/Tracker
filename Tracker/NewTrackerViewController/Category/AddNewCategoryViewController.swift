@@ -10,7 +10,7 @@ final class AddNewCategoryViewController: UIViewController {
         let textField = UITextField()
         textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 30))
         textField.leftViewMode = .always
-        textField.placeholder = "Введите название категории"
+        textField.placeholder = NSLocalizedString("EnterCategory", comment: "")
         textField.backgroundColor = .defaultColor
         textField.layer.cornerRadius = 16
         textField.clearButtonMode = .whileEditing
@@ -23,7 +23,7 @@ final class AddNewCategoryViewController: UIViewController {
     
     private lazy var doneButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Готово", for: .normal)
+        button.setTitle(NSLocalizedString("Done", comment: ""), for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .Gray
         button.layer.cornerRadius = 16
@@ -44,7 +44,7 @@ final class AddNewCategoryViewController: UIViewController {
         setupViews()
         editCategory()
         hideKeyboardWhenTappedAround()
-        title = isEdit ? "Редактировать" : "Новая категория"
+        title = isEdit ? NSLocalizedString("Edit", comment: "") : NSLocalizedString("NewCategory", comment: "")
     }
     // MARK: - Layouts
     private func setupViews() {

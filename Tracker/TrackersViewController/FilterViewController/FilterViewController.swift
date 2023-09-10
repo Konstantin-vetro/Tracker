@@ -7,8 +7,10 @@ import UIKit
 
 final class FilterViewController: UIViewController {
     private let filters: [String] = [
-        "Все трекеры", "Трекеры на сегодня",
-        "Завершенные", "Не завершенные"
+        NSLocalizedString("AllTrackers", comment: ""),
+        NSLocalizedString("TrackersForToday", comment: ""),
+        NSLocalizedString("Completed", comment: ""),
+        NSLocalizedString("Unfinished", comment: "")
     ]
     
     private let userDefaults = UserDefaults.standard

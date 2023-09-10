@@ -26,10 +26,12 @@ final class EmptyView: UIView {
         guard let imageFoundTrackers = UIImage(named: "noFound") else { return }
         
         self.placeholderImage.image = useImage ? imageCollection : imageFoundTrackers
+        let emptyCollection = NSLocalizedString("EmptyCollection", comment: "")
+        let emptyFound = NSLocalizedString("EmptyFound", comment: "")
         if text != nil {
             self.textLabel.text = text
         } else {
-            self.textLabel.text = useImage ? "Что будем отслеживать?" : "Ничего не найдено"
+            self.textLabel.text = useImage ? emptyCollection : emptyFound
         }
         
         setupViews()

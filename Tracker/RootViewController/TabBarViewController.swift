@@ -21,10 +21,10 @@ final class TabBarViewController: UITabBarController {
     private func generateTabBar() {
         viewControllers = [
             generateViewController(viewController: trackersViewController,
-                                   title: "Трекеры",
+                                   title: NSLocalizedString("Trackers", comment: ""),
                                    image: UIImage(named: "TrackersTabBarButton")),
             generateViewController(viewController: statisticViewController,
-                                   title: "Статистика",
+                                   title: NSLocalizedString("Statistics", comment: ""),
                                    image: UIImage(named: "StatisticTabBarButton"))
         ]
     }

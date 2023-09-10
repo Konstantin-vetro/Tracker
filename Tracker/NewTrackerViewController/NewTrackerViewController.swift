@@ -10,7 +10,7 @@ final class NewTrackerViewController: UIViewController {
         let textField = UITextField()
         textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 30))
         textField.leftViewMode = .always
-        textField.placeholder = "Введите название трекера"
+        textField.placeholder = NSLocalizedString("EnterTracker", comment: "")
         textField.backgroundColor = .defaultColor
         textField.layer.cornerRadius = 10
         textField.clearButtonMode = .whileEditing
@@ -22,7 +22,7 @@ final class NewTrackerViewController: UIViewController {
     
     private lazy var messageLabel: UILabel = {
         let label = UILabel()
-        label.text = "Ограничение 38 символов"
+        label.text = NSLocalizedString("Limit", comment: "")
         label.textColor = .Red
         label.font = UIFont.systemFont(ofSize: 17)
         return label
@@ -53,7 +53,7 @@ final class NewTrackerViewController: UIViewController {
     
     private lazy var cancelButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Отменить", for: .normal)
+        button.setTitle(NSLocalizedString("Cancel", comment: ""), for: .normal)
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.Red.cgColor
         button.setTitleColor(.Red, for: .normal)
@@ -67,7 +67,7 @@ final class NewTrackerViewController: UIViewController {
     
     private lazy var createButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Создать", for: .normal)
+        button.setTitle(NSLocalizedString("Create", comment: ""), for: .normal)
         button.tintColor = .white
         button.backgroundColor = .Gray
         button.layer.cornerRadius = 16
@@ -127,7 +127,8 @@ final class NewTrackerViewController: UIViewController {
     var chooseIrregularEvent: Bool = false
     lazy var isEdit: Bool = false
     
-    private let namesButton: [String] = ["Категория", "Расписание"]
+    private let namesButton: [String] = [NSLocalizedString("Category", comment: ""),
+                                         NSLocalizedString("Schedule", comment: "")]
     
     private var detailTextCategory: String?
     private var detailTextDays: [String]?
@@ -151,10 +152,6 @@ final class NewTrackerViewController: UIViewController {
     // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        if chooseIrregularEvent {
-            textField.placeholder = "Введите название события"
-        }
         hideKeyboardWhenTappedAround()
         setupViews()
         updateCollectionViewHeight()
@@ -332,7 +329,7 @@ final class NewTrackerViewController: UIViewController {
                 collectionView(collectionView, didSelectItemAt: colorIndexPath)
             }
             
-            createButton.setTitle("Сохранить", for: .normal)
+            createButton.setTitle(NSLocalizedString("Save", comment: ""), for: .normal)
         } else {
             daysLabelConstraintToTextField.constant = 0
         }
@@ -387,11 +384,19 @@ extension NewTrackerViewController: UITableViewDataSource {
             detailTextLabel.text = detailTextCategory
         case 1:
             if detailTextDays?.count == 7 {
-                detailTextLabel.text = "Каждый день"
+                detailTextLabel.text = NSLocalizedString("EveryDay", comment: "")
             } else {
                 let sortedDays = detailTextDays?.sorted { first, second in
-                    let orderedDays = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
-                    return orderedDays.firstIndex(of: first)! < orderedDays.firstIndex(of: second)!
+                    let orderedDays = [
+                        NSLocalizedString("shortMonday", comment: ""),
+                        NSLocalizedString("shortTuesday", comment: ""),
+                        NSLocalizedString("shortWednesday", comment: ""),
+                        NSLocalizedString("shortThursday", comment: ""),
+                        NSLocalizedString("shortFriday", comment: ""),
+                        NSLocalizedString("shortSaturday", comment: ""),
+                        NSLocalizedString("shortSunday", comment: ""),
+                    ]
+                    return orderedDays.firstIndex(of: first) ?? 0 < orderedDays.firstIndex(of: second) ?? 0
                 }
                 let days = sortedDays?.joined(separator: ", ")
                 detailTextLabel.text = days
@@ -410,7 +415,7 @@ extension NewTrackerViewController: UITableViewDelegate {
         if indexPath.row == 0 {
             let categoriesViewController = CategoriesViewController()
             categoriesViewController.delegate = self
-            categoriesViewController.title = "Категория"
+            categoriesViewController.title = NSLocalizedString("Category", comment: "")
             
             let navigationController = UINavigationController(rootViewController: categoriesViewController)
             navigationController.navigationBar.barTintColor = .white
@@ -419,7 +424,7 @@ extension NewTrackerViewController: UITableViewDelegate {
         } else if indexPath.row == 1 {
             let sheduleViewController = SheduleViewController()
             sheduleViewController.delegate = self
-            sheduleViewController.title = "Расписание"
+            sheduleViewController.title = NSLocalizedString("Schedule", comment: "")
             
             let navigationController = UINavigationController(rootViewController: sheduleViewController)
             navigationController.navigationBar.barTintColor = .white
@@ -531,7 +536,7 @@ extension NewTrackerViewController: UICollectionViewDelegate, UICollectionViewDe
             return view
         } else {
             guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as? HeaderViewCell else { return UICollectionReusableView()}
-            view.titleLabel.text = "Цвет"
+            view.titleLabel.text = NSLocalizedString("Color", comment: "")
             return view
         }
     }

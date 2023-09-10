@@ -22,7 +22,7 @@ final class CategoriesViewController: UIViewController {
     
     private lazy var addCategoryButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Добавить категорию", for: .normal)
+        button.setTitle(NSLocalizedString("AddCategory", comment: ""), for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .BlackDay
         button.layer.cornerRadius = 16
@@ -112,7 +112,7 @@ final class CategoriesViewController: UIViewController {
                 width: view.bounds.width,
                 height: view.bounds.height),
                                       useImage: forTable,
-                                      text: "Привычки и события можно\nобъединить по смыслу")
+                                      text: NSLocalizedString("EmptyCategories", comment: ""))
             tableView.backgroundView = emptyView
         } else {
             tableView.backgroundView = nil
@@ -171,7 +171,7 @@ extension CategoriesViewController: UITableViewDelegate {
     ) -> UIContextMenuConfiguration? {
         editingIndexPath = indexPath
         
-        let editAction = UIAction(title: "Редактировать") { [weak self] _ in
+        let editAction = UIAction(title: NSLocalizedString("Edit", comment: "")) { [weak self] _ in
             guard let self = self else { return }
             
             if let editingIndexPath = self.editingIndexPath {
@@ -180,7 +180,7 @@ extension CategoriesViewController: UITableViewDelegate {
             }
         }
         
-        let deleteAction = UIAction(title: "Удалить", attributes: .destructive) { [weak self] _ in
+        let deleteAction = UIAction(title: NSLocalizedString("Delete", comment: ""), attributes: .destructive) { [weak self] _ in
             guard let self = self else { return }
             self.viewModel.deleteCategory(at: indexPath)
             self.updateTableView(forTable: true)
