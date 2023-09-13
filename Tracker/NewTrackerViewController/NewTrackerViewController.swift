@@ -40,7 +40,7 @@ final class NewTrackerViewController: UIViewController {
         let tableView = UITableView(frame: .zero, style: .insetGrouped)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.register(SubtitledTableViewCell.self, forCellReuseIdentifier: "cell")
-        tableView.backgroundColor = .white
+        tableView.backgroundColor = .BackgroundDay
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 75
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
@@ -57,7 +57,7 @@ final class NewTrackerViewController: UIViewController {
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.Red.cgColor
         button.setTitleColor(.Red, for: .normal)
-        button.backgroundColor = .white
+        button.backgroundColor = .BackgroundDay
         button.layer.cornerRadius = 16
         button.layer.masksToBounds = true
         button.addTarget(self, action: #selector(exitView), for: .touchUpInside)
@@ -68,7 +68,7 @@ final class NewTrackerViewController: UIViewController {
     private lazy var createButton: UIButton = {
         let button = UIButton()
         button.setTitle(NSLocalizedString("Create", comment: ""), for: .normal)
-        button.tintColor = .white
+        button.setTitleColor(.BackgroundDay, for: .normal)
         button.backgroundColor = .Gray
         button.layer.cornerRadius = 16
         button.layer.masksToBounds = true
@@ -90,14 +90,12 @@ final class NewTrackerViewController: UIViewController {
     
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
-        scrollView.backgroundColor = .white
         scrollView.isScrollEnabled = true
         return scrollView
     }()
     
     private lazy var contentView: UIView = {
         let contentView = UIView()
-        contentView.backgroundColor = .white
         return contentView
     }()
     
@@ -110,7 +108,7 @@ final class NewTrackerViewController: UIViewController {
         collectionView.register(HeaderViewCell.self,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                 withReuseIdentifier: "header")
-        collectionView.backgroundColor = .white
+        collectionView.backgroundColor = .BackgroundDay
         collectionView.allowsMultipleSelection = true
         collectionView.isScrollEnabled = false
         collectionView.dataSource = self
@@ -215,7 +213,7 @@ final class NewTrackerViewController: UIViewController {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
-        view.backgroundColor = .white
+        view.backgroundColor = .BackgroundDay
         
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -303,13 +301,14 @@ final class NewTrackerViewController: UIViewController {
         if isEdit {
             daysLabelConstraintToTextField.constant = -40
             
+            let daysString = String.localizedStringWithFormat(NSLocalizedString("updateCounterText", comment: ""), daysTracker)
             switch daysTracker % 10 {
             case 1:
-                daysLabel.text = "\(daysTracker) день"
+                daysLabel.text = "\(daysTracker) " + daysString
             case 2 ... 4:
-                daysLabel.text = "\(daysTracker) дня"
+                daysLabel.text = "\(daysTracker) " + daysString
             default:
-                daysLabel.text = "\(daysTracker) дней"
+                daysLabel.text = "\(daysTracker) " + daysString
             }
             
             textField.text = currentTracker.name
@@ -418,7 +417,7 @@ extension NewTrackerViewController: UITableViewDelegate {
             categoriesViewController.title = NSLocalizedString("Category", comment: "")
             
             let navigationController = UINavigationController(rootViewController: categoriesViewController)
-            navigationController.navigationBar.barTintColor = .white
+            navigationController.navigationBar.barTintColor = .BackgroundDay
             navigationController.navigationBar.shadowImage = UIImage()
             present(navigationController, animated: true)
         } else if indexPath.row == 1 {
@@ -427,7 +426,7 @@ extension NewTrackerViewController: UITableViewDelegate {
             sheduleViewController.title = NSLocalizedString("Schedule", comment: "")
             
             let navigationController = UINavigationController(rootViewController: sheduleViewController)
-            navigationController.navigationBar.barTintColor = .white
+            navigationController.navigationBar.barTintColor = .BackgroundDay
             navigationController.navigationBar.shadowImage = UIImage()
             present(navigationController, animated: true)
         }

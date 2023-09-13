@@ -62,3 +62,7 @@
 "OnboardingButton" = "These are technologies!";
 "BlueScreen" = "Track only\nwhat you want";
 "RedScreen" = "Even if it is not\nliters of water and yoga";
+//Record Days
+"updateCounterText" = "%d ";
+//Alerts Message
+"AlertMessage" = "You can't mark trackers for fitire dates";

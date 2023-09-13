@@ -12,10 +12,34 @@ final class TabBarViewController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tabBar.tintColor = .Blue
-        tabBar.barTintColor = .white
+        tabBar.barTintColor = .BackgroundDay
         tabBar.layer.borderWidth = 1
-        tabBar.layer.borderColor = UIColor.LightGray.cgColor
+        updateBorderColor()
         generateTabBar()
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        if #available(iOS 13.0, *) {
+            if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+                updateBorderColor()
+            }
+        }
+    }
+    
+    private func updateBorderColor() {
+        if #available(iOS 13.0, *) {
+            let borderColor: UIColor
+            if traitCollection.userInterfaceStyle == .light {
+                borderColor = .lightGray
+            } else {
+                borderColor = .black
+            }
+            tabBar.layer.borderColor = borderColor.cgColor
+        } else {
+            tabBar.layer.borderColor = UIColor.lightGray.cgColor
+        }
     }
     
     private func generateTabBar() {

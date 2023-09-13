@@ -27,16 +27,12 @@ final class FilterViewController: UIViewController {
     }
     
     private lazy var tableView: UITableView = {
-        let tableView = UITableView(frame: CGRect(x: 0,
-                                                  y: 0,
-                                                  width: view.bounds.size.width,
-                                                  height: view.bounds.height),
-                                    style: .insetGrouped)
+        let tableView = UITableView(frame: .zero, style: .insetGrouped)
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "filterCell")
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.backgroundColor = .white
+        tableView.backgroundColor = .BackgroundDay
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
@@ -51,7 +47,7 @@ final class FilterViewController: UIViewController {
     
     private func setupView() {
         view.addSubview(tableView)
-        view.backgroundColor = .white
+        view.backgroundColor = .BackgroundDay
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),

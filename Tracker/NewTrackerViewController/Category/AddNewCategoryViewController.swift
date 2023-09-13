@@ -24,7 +24,7 @@ final class AddNewCategoryViewController: UIViewController {
     private lazy var doneButton: UIButton = {
         let button = UIButton()
         button.setTitle(NSLocalizedString("Done", comment: ""), for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(.BackgroundDay, for: .normal)
         button.backgroundColor = .Gray
         button.layer.cornerRadius = 16
         button.addTarget(self, action: #selector(saveCategory), for: .touchUpInside)
@@ -53,7 +53,7 @@ final class AddNewCategoryViewController: UIViewController {
             view.addSubview($0)
         }
         
-        view.backgroundColor = .white
+        view.backgroundColor = .BackgroundDay
         
         NSLayoutConstraint.activate([
             textField.heightAnchor.constraint(equalToConstant: 60),
@@ -104,14 +104,13 @@ extension AddNewCategoryViewController: UITextFieldDelegate {
         let newText = (textField.text as NSString?)?.replacingCharacters(in: range, with: string) ?? ""
         if newText.isEmpty || newText.first == " " {
             doneButton.backgroundColor = .Gray
-            doneButton.setTitleColor(.white, for: .normal)
             doneButton.isEnabled = false
             return newText != " "
         } else {
             doneButton.backgroundColor = .BlackDay
-            doneButton.setTitleColor(.white, for: .normal)
             doneButton.isEnabled = true
         }
+        doneButton.setTitleColor(.BackgroundDay, for: .normal)
         return true
     }
     

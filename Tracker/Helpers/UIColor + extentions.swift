@@ -6,9 +6,7 @@
 import UIKit
 
 extension UIColor {
-    static var BackgroundDay: UIColor { UIColor(named: "Background(day)") ?? UIColor.gray }
-    
-    static var BackgroundNight: UIColor { UIColor(named: "Background(night)") ?? UIColor.darkGray }
+    static var BackgroundDay: UIColor { UIColor(named: "Background(day)") ?? UIColor.white }
     
     static var BlackDay: UIColor { UIColor(named: "Black(day)") ?? UIColor.black }
     

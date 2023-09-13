@@ -33,7 +33,6 @@
 "Done" = "Готово";
 "AddCategory" = "Добавить категорию";
 //Headings
-
 "EnterTracker" = "Введите название трекера";
 "EnterCategory" = "Введите название категории";
 "Limit" = "Ограничение 38 символов";
@@ -63,3 +62,7 @@
 "OnboardingButton" = "Вот это технологии!";
 "BlueScreen" = "Отслеживайте только\nто, что хотите";
 "RedScreen" = "Даже если это\nне литры воды и йога";
+//Record Days
+"updateCounterText" = "%d ";
+//Alerts message
+"AlertMessage" = "Нельзя отмечать трекеры для будущих дат";

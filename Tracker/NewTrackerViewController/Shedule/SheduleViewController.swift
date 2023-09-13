@@ -7,13 +7,13 @@ import UIKit
 
 final class SheduleViewController: UIViewController {    
     private lazy var tableView: UITableView = {
-        let tableView = UITableView(frame: CGRect(x: 0, y: 0, width: .zero, height: .zero), style: .insetGrouped)
+        let tableView = UITableView(frame: .zero, style: .insetGrouped)
         tableView.register(SheduleViewCell.self, forCellReuseIdentifier: SheduleViewCell.identifier)
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         tableView.estimatedRowHeight = UITableView.automaticDimension
         tableView.rowHeight = 75
         tableView.isScrollEnabled = true
-        tableView.backgroundColor = .white
+        tableView.backgroundColor = .BackgroundDay
         tableView.allowsSelection = false
         tableView.dataSource = self
         return tableView
@@ -22,7 +22,7 @@ final class SheduleViewController: UIViewController {
     private lazy var doneButton: UIButton = {
         let button = UIButton()
         button.setTitle(NSLocalizedString("Done", comment: ""), for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(.BackgroundDay, for: .normal)
         button.backgroundColor = .BlackDay
         button.layer.cornerRadius = 16
         button.addTarget(self, action: #selector(saveWeekDays), for: .touchUpInside)
@@ -56,7 +56,7 @@ final class SheduleViewController: UIViewController {
             view.addSubview($0)
         }
         
-        view.backgroundColor = .white
+        view.backgroundColor = .BackgroundDay
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor),

@@ -68,7 +68,7 @@ final class TrackerCell: UICollectionViewCell {
             colorView.addSubview($0)
         }
         
-        self.backgroundColor = .white
+        self.backgroundColor = .BackgroundDay
         
         // MARK: - Layouts
         NSLayoutConstraint.activate([
@@ -110,7 +110,7 @@ final class TrackerCell: UICollectionViewCell {
             guard let delegate = delegate else { return }
             delegate.updateTrackerRecord(on: self)
         } else {
-            showAlert("Нельзя отмечать трекеры для будущих дат")
+            showAlert(NSLocalizedString("AlertMessage", comment: ""))
         }
     }
     // MARK: - Functions
@@ -134,13 +134,14 @@ final class TrackerCell: UICollectionViewCell {
     }
     
     private func updateCounterText(days: Int) {
+        let daysString = String.localizedStringWithFormat(NSLocalizedString("updateCounterText", comment: ""), days)
         switch days % 10 {
         case 1:
-            counterLabel.text = "\(days) день"
+            counterLabel.text = "\(days) " + daysString
         case 2 ... 4:
-            counterLabel.text = "\(days) дня"
+            counterLabel.text = "\(days) " + daysString
         default:
-            counterLabel.text = "\(days) дней"
+            counterLabel.text = "\(days) " + daysString
         }
     }
     

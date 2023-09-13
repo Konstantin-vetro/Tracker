@@ -48,7 +48,7 @@ final class EmptyView: UIView {
             addSubview($0)
         }
         
-        backgroundColor = .white
+        backgroundColor = .BackgroundDay
         
         NSLayoutConstraint.activate([
             placeholderImage.centerXAnchor.constraint(equalTo: centerXAnchor),

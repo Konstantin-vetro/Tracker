@@ -7,14 +7,10 @@ import UIKit
 
 final class CategoriesViewController: UIViewController {
     private lazy var tableView: UITableView = {
-        let tableView = UITableView(frame: CGRect(x: 0,
-                                                  y: 0,
-                                                  width: view.bounds.size.width,
-                                                  height: 500),
-                                    style: .insetGrouped)
+        let tableView = UITableView(frame: .zero, style: .insetGrouped)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "categoryCell")
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-        tableView.backgroundColor = .white
+        tableView.backgroundColor = .BackgroundDay
         tableView.dataSource = self
         tableView.delegate = self
         return tableView
@@ -23,7 +19,7 @@ final class CategoriesViewController: UIViewController {
     private lazy var addCategoryButton: UIButton = {
         let button = UIButton()
         button.setTitle(NSLocalizedString("AddCategory", comment: ""), for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(.BackgroundDay, for: .normal)
         button.backgroundColor = .BlackDay
         button.layer.cornerRadius = 16
         button.addTarget(self, action: #selector(addNewCategory), for: .touchUpInside)
@@ -72,7 +68,7 @@ final class CategoriesViewController: UIViewController {
             view.addSubview($0)
         }
         
-        view.backgroundColor = .white
+        view.backgroundColor = .BackgroundDay
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -99,7 +95,7 @@ final class CategoriesViewController: UIViewController {
         addNewCategoryViewController.editText = text
         
         let navigationController = UINavigationController(rootViewController: addNewCategoryViewController)
-        navigationController.navigationBar.barTintColor = .white
+        navigationController.navigationBar.barTintColor = .BackgroundDay
         navigationController.navigationBar.shadowImage = UIImage()
         present(navigationController, animated: true)
     }

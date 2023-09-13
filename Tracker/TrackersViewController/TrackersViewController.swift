@@ -27,6 +27,7 @@ class TrackersViewController: UIViewController {
         picker.datePickerMode = .date
         picker.tintColor = .black
         let localeID = Locale.preferredLanguages.first
+        picker.backgroundColor = .white
         picker.locale = Locale(identifier: localeID ?? "en_EN")
         picker.addTarget(self, action: #selector(datePickerValueChanges), for: .valueChanged)
         return picker
@@ -48,7 +49,7 @@ class TrackersViewController: UIViewController {
         collectionView.register(HeaderViewCell.self,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                 withReuseIdentifier: "header")
-        collectionView.backgroundColor = .white
+        collectionView.backgroundColor = .BackgroundDay
         collectionView.allowsMultipleSelection = false
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -86,7 +87,7 @@ class TrackersViewController: UIViewController {
         trackersTypeViewController.title = NSLocalizedString("CreateTracker", comment: "")
         trackersTypeViewController.delegate = self
         let navigationController = UINavigationController(rootViewController: trackersTypeViewController)
-        navigationController.navigationBar.barTintColor = .white
+        navigationController.navigationBar.barTintColor = .BackgroundDay
         navigationController.navigationBar.shadowImage = UIImage()
         present(navigationController, animated: true)
     }
@@ -97,7 +98,7 @@ class TrackersViewController: UIViewController {
         filterViewController.title = NSLocalizedString("Filters", comment: "")
         filterViewController.delegate = self
         let navigationController = UINavigationController(rootViewController: filterViewController)
-        navigationController.navigationBar.barTintColor = .white
+        navigationController.navigationBar.barTintColor = .BackgroundDay
         navigationController.navigationBar.shadowImage = UIImage()
         present(navigationController, animated: true)
     }
@@ -119,7 +120,7 @@ class TrackersViewController: UIViewController {
             view.addSubview($0)
         }
         
-        view.backgroundColor = .white
+        view.backgroundColor = .BackgroundDay
         
         NSLayoutConstraint.activate(
             [
@@ -142,7 +143,7 @@ class TrackersViewController: UIViewController {
     // MARK: - Settings
     private func setupNavigationBar() {
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTracker))
-        addButton.tintColor = .black
+        addButton.tintColor = .BlackDay
         let date = UIBarButtonItem(customView: datePicker)
         navigationItem.title = NSLocalizedString("Trackers", comment: "")
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -187,22 +188,14 @@ class TrackersViewController: UIViewController {
         var day = ""
         
         switch weekDay {
-        case 1:
-            day = "Вс"
-        case 2:
-            day = "Пн"
-        case 3:
-            day = "Вт"
-        case 4:
-            day = "Ср"
-        case 5:
-            day = "Чт"
-        case 6:
-            day = "Пт"
-        case 7:
-            day = "Сб"
-        default:
-            break
+        case 1: day = "Вс"
+        case 2: day = "Пн"
+        case 3: day = "Вт"
+        case 4: day = "Ср"
+        case 5: day = "Чт"
+        case 6: day = "Пт"
+        case 7: day = "Сб"
+        default: break
         }
         return day
     }
@@ -302,7 +295,7 @@ class TrackersViewController: UIViewController {
         let editViewController = NewTrackerViewController()
         
         if tracker.shedule?.isEmpty == true {
-            let editEvent = NSLocalizedString("editEvent", comment: "")
+            let editEvent = NSLocalizedString("EditEvent", comment: "")
             editViewController.title = editEvent
             editViewController.chooseIrregularEvent = true
         } else {
@@ -314,13 +307,13 @@ class TrackersViewController: UIViewController {
         editViewController.currentTracker = tracker
         editViewController.editCategory = category
         editViewController.daysCount = daysCount
-        editViewController.onTrackerCreated = {[weak self] tracker, category in
+        editViewController.onTrackerCreated = { [weak self] tracker, category in
             guard let self = self else { return }
             self.createTracker(tracker, category: category)
         }
         
         let navigationController = UINavigationController(rootViewController: editViewController)
-        navigationController.navigationBar.barTintColor = .white
+        navigationController.navigationBar.barTintColor = .BackgroundDay
         navigationController.navigationBar.shadowImage = UIImage()
         present(navigationController, animated: true)
     }
