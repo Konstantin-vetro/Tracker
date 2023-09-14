@@ -25,6 +25,7 @@ final class TrackersTypeViewController: UIViewController {
     }()
     
     weak var delegate: TrackerViewControllerDelegate?
+    private let analyticsService: AnalyticsServiceProtocol = AnalyticsService()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,6 +60,7 @@ final class TrackersTypeViewController: UIViewController {
     // MARK: - Actions
     @objc
     private func addNewHabit() {
+        analyticsService.clickHabitReport()
         let habitViewController = NewTrackerViewController()
         habitViewController.title = NSLocalizedString("NewHabit", comment: "")
         habitViewController.onTrackerCreated = { [weak self] tracker, titleCategory in
@@ -74,6 +76,7 @@ final class TrackersTypeViewController: UIViewController {
     
     @objc
     private func addIreggularEvent() {
+        analyticsService.clickEventReport()
         let eventViewController = NewTrackerViewController()
         eventViewController.title = NSLocalizedString("NewEvent", comment: "")
         eventViewController.onTrackerCreated = { [weak self] (tracker, titleCategory) in

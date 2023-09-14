@@ -20,6 +20,8 @@ class TrackersViewController: UIViewController {
     private let trackerStore = TrackerStore()
     private let trackerCategoryStore = TrackerCategoryStore()
     private let trackerRecordStore = TrackerRecordStore()
+    
+    private let analyticsService: AnalyticsServiceProtocol = AnalyticsService()
     // MARK: - UI
     private lazy var datePicker: UIDatePicker = {
         let picker = UIDatePicker()
@@ -78,11 +80,21 @@ class TrackersViewController: UIViewController {
         loadFixedTrackers()
         showVisibleCategories()
         isCompletedTracker()
-        showBackgroundView(forCollection: true)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        analyticsService.openScreenReport(screen: .main)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        analyticsService.closeScreenReport(screen: .main)
     }
     // MARK: - Actions
     @objc
     private func addTracker() {
+        analyticsService.addTrackReport()
         let trackersTypeViewController = TrackersTypeViewController()
         trackersTypeViewController.title = NSLocalizedString("CreateTracker", comment: "")
         trackersTypeViewController.delegate = self
@@ -94,6 +106,7 @@ class TrackersViewController: UIViewController {
     
     @objc
     private func addFilter() {
+        analyticsService.addFilterReport()
         let filterViewController = FilterViewController()
         filterViewController.title = NSLocalizedString("Filters", comment: "")
         filterViewController.delegate = self
@@ -283,6 +296,7 @@ class TrackersViewController: UIViewController {
     private func makeEditAction(indexPath: IndexPath) -> UIAction {
         return UIAction(title: NSLocalizedString("Edit", comment: "")) { [weak self] _ in
             guard let self = self else { return }
+            self.analyticsService.editTrackReport()
             self.editTracker(at: indexPath)
         }
     }
@@ -322,6 +336,7 @@ class TrackersViewController: UIViewController {
         let confirmMessage = NSLocalizedString("ConfirmTracker", comment: "")
         return UIAction(title: NSLocalizedString("Delete", comment: ""), attributes: .destructive) { [weak self] _ in
             guard let self = self else { return }
+            self.analyticsService.deleteTrackReport()
             let alert = UIAlertController(title: "", message: confirmMessage, preferredStyle: .actionSheet)
             let delete = UIAlertAction(title: NSLocalizedString("Delete", comment: ""),
                                        style: .destructive) { [weak self] _ in
@@ -493,6 +508,7 @@ extension TrackersViewController: TrackerCellDelegate {
         
         if isToday {
             if isCompleteSelectedTracker[id] == nil || !(isCompleteSelectedTracker[id] ?? false ) {
+                analyticsService.clickRecordTrackReport()
                 daysCount += 1
                 try? trackerRecordStore.addRecord(recordTracker)
                 isCompleteSelectedTracker[id] = true
@@ -503,6 +519,7 @@ extension TrackersViewController: TrackerCellDelegate {
             }
         } else {
             if !(isCompleteSelectedTracker[id] ?? false) {
+                analyticsService.clickRecordTrackReport()
                 daysCount += 1
                 try? trackerRecordStore.addRecord(recordTracker)
                 isCompleteSelectedTracker[id] = true

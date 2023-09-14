@@ -6,11 +6,7 @@
 import UIKit
 
 final class EmptyView: UIView {
-    private lazy var placeholderImage: UIImageView = {
-        let image = UIImage(named: "placeholderImage")
-        let imageView = UIImageView(image: image)
-        return imageView
-    }()
+    private lazy var placeholderImage =  UIImageView()
     
     private lazy var textLabel: UILabel = {
         let label = UILabel()

@@ -147,6 +147,8 @@ final class NewTrackerViewController: UIViewController {
     var currentTracker: Tracker?
     var editCategory: String?
     var daysCount: Int?
+    
+    private let analyticsService: AnalyticsServiceProtocol = AnalyticsService()
     // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -158,6 +160,7 @@ final class NewTrackerViewController: UIViewController {
     // MARK: - Actions
     @objc
     private func createTracker() {
+        analyticsService.clickCreateTrackerReport()
         guard let name = textField.text,
               let category = detailTextCategory,
               let selectedEmojieIndexPath = isSelectedEmoji,
@@ -181,6 +184,7 @@ final class NewTrackerViewController: UIViewController {
     
     @objc
     private func exitView() {
+        analyticsService.clickExitViewForNewTracker()
         dismiss(animated: true)
     }
     
