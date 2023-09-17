@@ -7,12 +7,18 @@ import Foundation
 import YandexMobileMetrica
 
 struct AnalyticsService: AnalyticsServiceProtocol {
+    func activateAnalytics() {
+        guard let configuration = YMMYandexMetricaConfiguration(apiKey: "fd4abd52-263c-4254-b969-fc026a7624eb") else { return }
+        
+        YMMYandexMetrica.activate(with: configuration)
+    }
+    
     func openScreenReport(screen: ScreenName) {
-        report(event: "open", params: ["screen" : screen])
+        report(event: "open", params: ["screen" : "\(screen)"])
     }
     
     func closeScreenReport(screen: ScreenName) {
-        report(event: "close", params: ["screen" : screen])
+        report(event: "close", params: ["screen" : "\(screen)"])
     }
 
     func addTrackReport() {
@@ -51,7 +57,7 @@ struct AnalyticsService: AnalyticsServiceProtocol {
         report(event: "click", params: ["screen" : "NewTracker", "item" : "exit_view"])
     }
     
-    private func report(event: String, params: [AnyHashable : Any]) {
+    private func report(event: String, params: [AnyHashable : String]) {
         YMMYandexMetrica.reportEvent(event, parameters: params) { error in
             print("REPORT ERROR %@", error.localizedDescription)
         }

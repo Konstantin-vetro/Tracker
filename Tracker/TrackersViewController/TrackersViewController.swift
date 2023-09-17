@@ -320,10 +320,13 @@ class TrackersViewController: UIViewController {
         editViewController.isEdit = true
         editViewController.currentTracker = tracker
         editViewController.editCategory = category
+        editViewController.dayButtonToggled = isCompleteSelectedTracker[tracker.id] ?? false
         editViewController.daysCount = daysCount
+        editViewController.date = currentDate
         editViewController.onTrackerCreated = { [weak self] tracker, category in
             guard let self = self else { return }
             self.createTracker(tracker, category: category)
+            self.isCompletedTracker()
         }
         
         let navigationController = UINavigationController(rootViewController: editViewController)

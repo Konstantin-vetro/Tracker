@@ -28,12 +28,13 @@ final class NewTrackerViewController: UIViewController {
         return label
     }()
     
-    private lazy var daysLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .BlackDay
-        label.font = UIFont.systemFont(ofSize: 32, weight: .bold)
-        label.textAlignment = .center
-        return label
+    private lazy var daysButton: UIButton = {
+        let button = UIButton()
+        button.setTitleColor(.BlackDay, for: .normal)
+        button.backgroundColor = .BackgroundDay
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 32, weight: .bold)
+        button.addTarget(self, action: #selector(toogleRecordButton), for: .touchUpInside)
+        return button
     }()
     
     private lazy var tableView: UITableView = {
@@ -116,8 +117,7 @@ final class NewTrackerViewController: UIViewController {
         return collectionView
     }()
     // MARK: - Properties
-    private var daysLabelConstraintToContent = NSLayoutConstraint()
-    private var daysLabelConstraintToTextField = NSLayoutConstraint()
+    private var daysbuttonConstraintToTextField = NSLayoutConstraint()
     private var labelBetweenTextFieldAndTableContraint = NSLayoutConstraint()
     private var tableViewHeightContraint = NSLayoutConstraint()
     private var collectionViewHeightContraint = NSLayoutConstraint()
@@ -143,12 +143,15 @@ final class NewTrackerViewController: UIViewController {
     private var isSelectedColor: IndexPath?
     
     var onTrackerCreated: ((_ tracker: Tracker, _ titleCategory: String?) -> Void)?
-
+    
     var currentTracker: Tracker?
     var editCategory: String?
     var daysCount: Int?
+    var dayButtonToggled: Bool?
+    var date: Date?
     
     private let analyticsService: AnalyticsServiceProtocol = AnalyticsService()
+    private let trackerRecordStore = TrackerRecordStore()
     // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -205,10 +208,10 @@ final class NewTrackerViewController: UIViewController {
         
         tableViewHeightContraint = tableView.heightAnchor.constraint(equalToConstant: tableView.contentSize.height)
         collectionViewHeightContraint = collectionView.heightAnchor.constraint(equalToConstant: 0)
-        daysLabelConstraintToTextField = daysLabel.bottomAnchor.constraint(equalTo: textField.topAnchor,
+        daysbuttonConstraintToTextField = daysButton.bottomAnchor.constraint(equalTo: textField.topAnchor,
                                                                            constant: 0)
         // MARK: - Layouts
-        [daysLabel, textField, messageLabel, tableView, collectionView, buttonStackView].forEach {
+        [daysButton, textField, messageLabel, tableView, collectionView, buttonStackView].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             contentView.addSubview($0)
         }
@@ -232,9 +235,9 @@ final class NewTrackerViewController: UIViewController {
             
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
-            daysLabel.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 24),
-            daysLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            daysLabelConstraintToTextField,
+            daysButton.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 24),
+            daysButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            daysbuttonConstraintToTextField,
             
             textField.heightAnchor.constraint(equalToConstant: 75),
             textField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
@@ -299,21 +302,12 @@ final class NewTrackerViewController: UIViewController {
     }
     
     private func editTracker() {
-        guard let daysTracker = daysCount,
-              let currentTracker = currentTracker else { return }
+        guard let currentTracker = currentTracker else { return }
         
         if isEdit {
-            daysLabelConstraintToTextField.constant = -40
+            daysbuttonConstraintToTextField.constant = -40
             
-            let daysString = String.localizedStringWithFormat(NSLocalizedString("updateCounterText", comment: ""), daysTracker)
-            switch daysTracker % 10 {
-            case 1:
-                daysLabel.text = "\(daysTracker) " + daysString
-            case 2 ... 4:
-                daysLabel.text = "\(daysTracker) " + daysString
-            default:
-                daysLabel.text = "\(daysTracker) " + daysString
-            }
+            updateDaysButtonTitle()
             
             textField.text = currentTracker.name
             detailTextCategory = editCategory
@@ -334,7 +328,36 @@ final class NewTrackerViewController: UIViewController {
             
             createButton.setTitle(NSLocalizedString("Save", comment: ""), for: .normal)
         } else {
-            daysLabelConstraintToTextField.constant = 0
+            daysbuttonConstraintToTextField.constant = 0
+        }
+    }
+    
+    @objc
+    private func toogleRecordButton() {
+        guard let daysTracker = daysCount,
+              let date = date else { return }
+        dayButtonToggled?.toggle()
+
+        if dayButtonToggled ?? false {
+            daysCount = daysTracker + 1
+            try? trackerRecordStore.addRecord(TrackerRecord(id: currentTracker?.id ?? UUID(), date: date))
+        } else {
+            daysCount = daysTracker - 1
+            try? trackerRecordStore.deleteRecord(TrackerRecord(id: currentTracker?.id ?? UUID(), date: date))
+        }
+        updateDaysButtonTitle()
+    }
+    
+    private func updateDaysButtonTitle() {
+        guard let daysTracker = daysCount else { return }
+        let daysString = String.localizedStringWithFormat(NSLocalizedString("updateCounterText", comment: ""), daysTracker)
+        switch daysTracker % 10 {
+        case 1:
+            daysButton.setTitle("\(daysTracker) " + daysString, for: .normal)
+        case 2 ... 4:
+            daysButton.setTitle("\(daysTracker) " + daysString, for: .normal)
+        default:
+            daysButton.setTitle("\(daysTracker) " + daysString, for: .normal)
         }
     }
 }

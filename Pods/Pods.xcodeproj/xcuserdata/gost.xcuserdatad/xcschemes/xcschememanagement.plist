@@ -4,12 +4,12 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Pods-Tracker-TrackerUITests.xcscheme</key>
+		<key>Pods-Tracker.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-Tracker.xcscheme</key>
+		<key>Pods-TrackerTests.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
