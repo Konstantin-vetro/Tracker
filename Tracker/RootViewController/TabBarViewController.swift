@@ -13,7 +13,11 @@ final class TabBarViewController: UITabBarController {
         super.viewDidLoad()
         tabBar.tintColor = .Blue
         tabBar.barTintColor = .BackgroundDay
-        tabBar.layer.borderWidth = 1
+        tabBar.layer.borderWidth = 0.5
+        if let trackersVC = trackersViewController.viewControllers.first as? TrackersViewController,
+           let statisticVC = statisticViewController.viewControllers.first as? StatisticViewController {
+            trackersVC.delegate = statisticVC
+            }
         updateBorderColor()
         generateTabBar()
     }

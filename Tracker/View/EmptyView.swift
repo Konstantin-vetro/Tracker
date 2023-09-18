@@ -16,18 +16,19 @@ final class EmptyView: UIView {
         return label
     }()
     
-    init(frame: CGRect, useImage: Bool, text: String? = nil) {
+    init(frame: CGRect, useImage: Bool? = nil, text: String? = nil, uiImage: UIImage? = nil) {
         super.init(frame: frame)
-        guard let imageCollection = UIImage(named: "placeholderImage") else { return }
-        guard let imageFoundTrackers = UIImage(named: "noFound") else { return }
+        guard let imageCollection = UIImage(named: "placeholderImage"),
+              let imageFoundTrackers = UIImage(named: "noFound") else { return }
         
-        self.placeholderImage.image = useImage ? imageCollection : imageFoundTrackers
+        placeholderImage.image = useImage ?? false ? imageCollection : imageFoundTrackers
         let emptyCollection = NSLocalizedString("EmptyCollection", comment: "")
         let emptyFound = NSLocalizedString("EmptyFound", comment: "")
         if text != nil {
-            self.textLabel.text = text
+            placeholderImage.image = uiImage
+            textLabel.text = text
         } else {
-            self.textLabel.text = useImage ? emptyCollection : emptyFound
+            textLabel.text = useImage ?? false ? emptyCollection : emptyFound
         }
         
         setupViews()

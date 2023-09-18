@@ -22,6 +22,7 @@ class TrackersViewController: UIViewController {
     private let trackerRecordStore = TrackerRecordStore()
     
     private let analyticsService: AnalyticsServiceProtocol = AnalyticsService()
+    weak var delegate: StatisticViewControllerDelegate?
     // MARK: - UI
     private lazy var datePicker: UIDatePicker = {
         let picker = UIDatePicker()
@@ -32,6 +33,8 @@ class TrackersViewController: UIViewController {
         picker.backgroundColor = .white
         picker.locale = Locale(identifier: localeID ?? "en_EN")
         picker.addTarget(self, action: #selector(datePickerValueChanges), for: .valueChanged)
+        picker.layer.cornerRadius = 10
+        picker.clipsToBounds = true
         return picker
     }()
     
@@ -327,6 +330,7 @@ class TrackersViewController: UIViewController {
             guard let self = self else { return }
             self.createTracker(tracker, category: category)
             self.isCompletedTracker()
+            self.delegate?.showCompletedTrackers(self.completedTrackers.count)
         }
         
         let navigationController = UINavigationController(rootViewController: editViewController)
@@ -534,6 +538,7 @@ extension TrackersViewController: TrackerCellDelegate {
         }
         completedTrackers = trackerRecordStore.records
         cell.updateRecord(days: daysCount, isCompleted: isCompleteSelectedTracker[id] ?? false)
+        delegate?.showCompletedTrackers(completedTrackers.count)
         collectionView.reloadData()
     }
     

@@ -20,6 +20,10 @@ extension UIColor {
     
     static var defaultColor: UIColor { UIColor(named: "defaultColor") ?? UIColor.white}
     
+    static var gradientRed: UIColor { UIColor(named: "gradientRed") ?? UIColor.red}
+    static var gradientGreen: UIColor { UIColor(named: "gradientGreen") ?? UIColor.green}
+    static var gradientBlue: UIColor { UIColor(named: "gradientBlue") ?? UIColor.blue}
+    
     static let colorSelection: [UIColor] = [
         UIColor(named: "Color selection 1") ?? .red,
         UIColor(named: "Color selection 2") ?? .orange,

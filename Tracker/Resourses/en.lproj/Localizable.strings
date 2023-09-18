@@ -66,3 +66,6 @@
 "updateCounterText" = "%d ";
 //Alerts Message
 "AlertMessage" = "You can't mark trackers for fitire dates";
+//Statistics
+"NoAnalyze" = "There is nothing to analyze yet";
+"TrackersCompleted" = "Trackers completed";

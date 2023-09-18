@@ -66,3 +66,6 @@
 "updateCounterText" = "%d ";
 //Alerts message
 "AlertMessage" = "Нельзя отмечать трекеры для будущих дат";
+//Statistics
+"NoAnalyze" = "Анализировать пока нечего";
+"TrackersCompleted" = "Трекеров завершено";
