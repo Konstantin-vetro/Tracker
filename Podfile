@@ -9,6 +9,7 @@ target 'Tracker' do
 
   target 'TrackerTests' do
     inherit! :search_paths
+    pod 'SnapshotTesting', '~> 1.8.1' 
     # Pods for testing
   end
 
