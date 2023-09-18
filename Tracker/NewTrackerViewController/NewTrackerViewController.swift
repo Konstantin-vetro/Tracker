@@ -186,11 +186,26 @@ final class NewTrackerViewController: UIViewController {
     }
     
     @objc
+    private func toogleRecordButton() {
+        guard let daysTracker = daysCount,
+              let date = date else { return }
+        dayButtonToggled?.toggle()
+
+        if dayButtonToggled ?? false {
+            daysCount = daysTracker + 1
+            try? trackerRecordStore.addRecord(TrackerRecord(id: currentTracker?.id ?? UUID(), date: date))
+        } else {
+            daysCount = daysTracker - 1
+            try? trackerRecordStore.deleteRecord(TrackerRecord(id: currentTracker?.id ?? UUID(), date: date))
+        }
+        updateDaysButtonTitle()
+    }
+    
+    @objc
     private func exitView() {
         analyticsService.clickExitViewForNewTracker()
         dismiss(animated: true)
     }
-    
     // MARK: - SetupViews
     private func setupViews() {
         view.addSubview(scrollView)
@@ -235,7 +250,7 @@ final class NewTrackerViewController: UIViewController {
             
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
-            daysButton.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 24),
+            daysButton.topAnchor.constraint(equalTo: contentView.topAnchor),
             daysButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             daysbuttonConstraintToTextField,
             
@@ -330,22 +345,6 @@ final class NewTrackerViewController: UIViewController {
         } else {
             daysbuttonConstraintToTextField.constant = 0
         }
-    }
-    
-    @objc
-    private func toogleRecordButton() {
-        guard let daysTracker = daysCount,
-              let date = date else { return }
-        dayButtonToggled?.toggle()
-
-        if dayButtonToggled ?? false {
-            daysCount = daysTracker + 1
-            try? trackerRecordStore.addRecord(TrackerRecord(id: currentTracker?.id ?? UUID(), date: date))
-        } else {
-            daysCount = daysTracker - 1
-            try? trackerRecordStore.deleteRecord(TrackerRecord(id: currentTracker?.id ?? UUID(), date: date))
-        }
-        updateDaysButtonTitle()
     }
     
     private func updateDaysButtonTitle() {
