@@ -30,11 +30,11 @@ struct AnalyticsService: AnalyticsServiceProtocol {
     }
     
     func editTrackReport() {
-        report(event: "click", params: ["screen" : "Main", "edit" : "track"])
+        report(event: "click", params: ["screen" : "Main", "item" : "edit"])
     }
     
     func deleteTrackReport() {
-        report(event: "click", params: ["screen" : "Main", "delete" : "track"])
+        report(event: "click", params: ["screen" : "Main", "item" : "delete"])
     }
     
     func clickRecordTrackReport() {

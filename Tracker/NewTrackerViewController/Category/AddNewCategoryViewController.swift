@@ -24,8 +24,8 @@ final class AddNewCategoryViewController: UIViewController {
     private lazy var doneButton: UIButton = {
         let button = UIButton()
         button.setTitle(NSLocalizedString("Done", comment: ""), for: .normal)
-        button.setTitleColor(.BackgroundDay, for: .normal)
-        button.backgroundColor = .Gray
+        button.setTitleColor(.backgroundDay, for: .normal)
+        button.backgroundColor = .customGray
         button.layer.cornerRadius = 16
         button.addTarget(self, action: #selector(saveCategory), for: .touchUpInside)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
@@ -53,7 +53,7 @@ final class AddNewCategoryViewController: UIViewController {
             view.addSubview($0)
         }
         
-        view.backgroundColor = .BackgroundDay
+        view.backgroundColor = .backgroundDay
         
         NSLayoutConstraint.activate([
             textField.heightAnchor.constraint(equalToConstant: 60),
@@ -83,7 +83,7 @@ final class AddNewCategoryViewController: UIViewController {
         if isEdit {
             textField.text = editText
             
-            doneButton.backgroundColor = .BlackDay
+            doneButton.backgroundColor = .blackDay
             doneButton.setTitleColor(.white, for: .normal)
             doneButton.isEnabled = true
         }
@@ -103,20 +103,20 @@ extension AddNewCategoryViewController: UITextFieldDelegate {
     ) -> Bool {
         let newText = (textField.text as NSString?)?.replacingCharacters(in: range, with: string) ?? ""
         if newText.isEmpty || newText.first == " " {
-            doneButton.backgroundColor = .Gray
+            doneButton.backgroundColor = .customGray
             doneButton.isEnabled = false
             return newText != " "
         } else {
-            doneButton.backgroundColor = .BlackDay
+            doneButton.backgroundColor = .blackDay
             doneButton.isEnabled = true
         }
-        doneButton.setTitleColor(.BackgroundDay, for: .normal)
+        doneButton.setTitleColor(.backgroundDay, for: .normal)
         return true
     }
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
         if textField.text?.isEmpty == true {
-            doneButton.backgroundColor = .Gray
+            doneButton.backgroundColor = .customGray
             doneButton.setTitleColor(.white, for: .normal)
         }
     }

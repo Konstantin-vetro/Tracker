@@ -10,7 +10,7 @@ final class CategoriesViewController: UIViewController {
         let tableView = UITableView(frame: .zero, style: .insetGrouped)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "categoryCell")
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-        tableView.backgroundColor = .BackgroundDay
+        tableView.backgroundColor = .backgroundDay
         tableView.dataSource = self
         tableView.delegate = self
         return tableView
@@ -19,8 +19,8 @@ final class CategoriesViewController: UIViewController {
     private lazy var addCategoryButton: UIButton = {
         let button = UIButton()
         button.setTitle(NSLocalizedString("AddCategory", comment: ""), for: .normal)
-        button.setTitleColor(.BackgroundDay, for: .normal)
-        button.backgroundColor = .BlackDay
+        button.setTitleColor(.backgroundDay, for: .normal)
+        button.backgroundColor = .blackDay
         button.layer.cornerRadius = 16
         button.addTarget(self, action: #selector(addNewCategory), for: .touchUpInside)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
@@ -68,7 +68,7 @@ final class CategoriesViewController: UIViewController {
             view.addSubview($0)
         }
         
-        view.backgroundColor = .BackgroundDay
+        view.backgroundColor = .backgroundDay
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -95,20 +95,22 @@ final class CategoriesViewController: UIViewController {
         addNewCategoryViewController.editText = text
         
         let navigationController = UINavigationController(rootViewController: addNewCategoryViewController)
-        navigationController.navigationBar.barTintColor = .BackgroundDay
+        navigationController.navigationBar.barTintColor = .backgroundDay
         navigationController.navigationBar.shadowImage = UIImage()
         present(navigationController, animated: true)
     }
     
     private func updateTableView(forTable: Bool) {
         if viewModel.isEmpty() {
-            let emptyView = EmptyView(frame: CGRect(
-                x: 0,
-                y: 0,
-                width: view.bounds.width,
-                height: view.bounds.height),
-                                      useImage: forTable,
-                                      text: NSLocalizedString("EmptyCategories", comment: ""))
+            let emptyView = EmptyView(
+                frame: CGRect(
+                    x: 0,
+                    y: 0,
+                    width: view.bounds.width,
+                    height: view.bounds.height),
+                useImage: forTable,
+                text: NSLocalizedString("EmptyCategories", comment: "")
+            )
             tableView.backgroundView = emptyView
         } else {
             tableView.backgroundView = nil

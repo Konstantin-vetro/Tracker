@@ -28,10 +28,8 @@ class TrackersViewController: UIViewController {
         let picker = UIDatePicker()
         picker.preferredDatePickerStyle = .compact
         picker.datePickerMode = .date
-        picker.tintColor = .black
-        let localeID = Locale.preferredLanguages.first
-        picker.backgroundColor = .white
-        picker.locale = Locale(identifier: localeID ?? "en_EN")
+        picker.tintColor = .customBlue
+        picker.locale = .current
         picker.addTarget(self, action: #selector(datePickerValueChanges), for: .valueChanged)
         picker.layer.cornerRadius = 10
         picker.clipsToBounds = true
@@ -54,7 +52,7 @@ class TrackersViewController: UIViewController {
         collectionView.register(HeaderViewCell.self,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                 withReuseIdentifier: "header")
-        collectionView.backgroundColor = .BackgroundDay
+        collectionView.backgroundColor = .backgroundDay
         collectionView.allowsMultipleSelection = false
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -66,7 +64,7 @@ class TrackersViewController: UIViewController {
         button.setTitle(NSLocalizedString("Filters", comment: ""), for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .Blue
+        button.backgroundColor = .customBlue
         button.layer.cornerRadius = 16
         button.clipsToBounds = true
         button.addTarget(self, action: #selector(addFilter), for: .touchUpInside)
@@ -102,7 +100,7 @@ class TrackersViewController: UIViewController {
         trackersTypeViewController.title = NSLocalizedString("CreateTracker", comment: "")
         trackersTypeViewController.delegate = self
         let navigationController = UINavigationController(rootViewController: trackersTypeViewController)
-        navigationController.navigationBar.barTintColor = .BackgroundDay
+        navigationController.navigationBar.barTintColor = .backgroundDay
         navigationController.navigationBar.shadowImage = UIImage()
         present(navigationController, animated: true)
     }
@@ -114,7 +112,7 @@ class TrackersViewController: UIViewController {
         filterViewController.title = NSLocalizedString("Filters", comment: "")
         filterViewController.delegate = self
         let navigationController = UINavigationController(rootViewController: filterViewController)
-        navigationController.navigationBar.barTintColor = .BackgroundDay
+        navigationController.navigationBar.barTintColor = .backgroundDay
         navigationController.navigationBar.shadowImage = UIImage()
         present(navigationController, animated: true)
     }
@@ -136,7 +134,7 @@ class TrackersViewController: UIViewController {
             view.addSubview($0)
         }
         
-        view.backgroundColor = .BackgroundDay
+        view.backgroundColor = .backgroundDay
         
         NSLayoutConstraint.activate(
             [
@@ -159,7 +157,7 @@ class TrackersViewController: UIViewController {
     // MARK: - Settings
     private func setupNavigationBar() {
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTracker))
-        addButton.tintColor = .BlackDay
+        addButton.tintColor = .blackDay
         let date = UIBarButtonItem(customView: datePicker)
         navigationItem.title = NSLocalizedString("Trackers", comment: "")
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -243,11 +241,13 @@ class TrackersViewController: UIViewController {
     
     private func showBackgroundView(forCollection: Bool) {
         if visibleCategories.isEmpty {
-            let emptyView = EmptyView(frame: CGRect(x: 0,
-                                                    y: 0,
-                                                    width: view.bounds.width,
-                                                    height: view.bounds.height),
-                                      useImage: forCollection)
+            let emptyView = EmptyView(
+                frame: CGRect(x: 0,
+                              y: 0,
+                              width: view.bounds.width,
+                              height: view.bounds.height),
+                useImage: forCollection
+            )
             collectionView.backgroundView = emptyView
             filterButton.isHidden = true
         } else {
@@ -334,7 +334,7 @@ class TrackersViewController: UIViewController {
         }
         
         let navigationController = UINavigationController(rootViewController: editViewController)
-        navigationController.navigationBar.barTintColor = .BackgroundDay
+        navigationController.navigationBar.barTintColor = .backgroundDay
         navigationController.navigationBar.shadowImage = UIImage()
         present(navigationController, animated: true)
     }

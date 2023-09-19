@@ -11,8 +11,8 @@ final class TabBarViewController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tabBar.tintColor = .Blue
-        tabBar.barTintColor = .BackgroundDay
+        tabBar.tintColor = .customBlue
+        tabBar.barTintColor = .backgroundDay
         tabBar.layer.borderWidth = 0.5
         if let trackersVC = trackersViewController.viewControllers.first as? TrackersViewController,
            let statisticVC = statisticViewController.viewControllers.first as? StatisticViewController {

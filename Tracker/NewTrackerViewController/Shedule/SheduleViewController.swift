@@ -13,7 +13,7 @@ final class SheduleViewController: UIViewController {
         tableView.estimatedRowHeight = UITableView.automaticDimension
         tableView.rowHeight = 75
         tableView.isScrollEnabled = true
-        tableView.backgroundColor = .BackgroundDay
+        tableView.backgroundColor = .backgroundDay
         tableView.allowsSelection = false
         tableView.dataSource = self
         return tableView
@@ -22,8 +22,8 @@ final class SheduleViewController: UIViewController {
     private lazy var doneButton: UIButton = {
         let button = UIButton()
         button.setTitle(NSLocalizedString("Done", comment: ""), for: .normal)
-        button.setTitleColor(.BackgroundDay, for: .normal)
-        button.backgroundColor = .BlackDay
+        button.setTitleColor(.backgroundDay, for: .normal)
+        button.backgroundColor = .blackDay
         button.layer.cornerRadius = 16
         button.addTarget(self, action: #selector(saveWeekDays), for: .touchUpInside)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
@@ -56,7 +56,7 @@ final class SheduleViewController: UIViewController {
             view.addSubview($0)
         }
         
-        view.backgroundColor = .BackgroundDay
+        view.backgroundColor = .backgroundDay
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor),

@@ -11,11 +11,11 @@ final class TrackerTests: XCTestCase {
 
     func testLightViewController() {
         let vc = TrackersViewController()
-        assertSnapshot(matching: vc, as: .image(traits: .init(userInterfaceStyle: .light)))
+        assertSnapshot(matching: vc, as: .image(traits: UITraitCollection(userInterfaceStyle: .light)))
     }
 
     func testDarktViewController() {
         let vc = TrackersViewController()
-        assertSnapshot(matching: vc, as: .image(traits: .init(userInterfaceStyle: .dark)))
+        assertSnapshot(matching: vc, as: .image(traits: UITraitCollection(userInterfaceStyle: .dark)))
     }
 }

@@ -36,13 +36,13 @@ final class TrackersTypeViewController: UIViewController {
         [habitButton, irregularEventButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             $0.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-            $0.backgroundColor = .BlackDay
-            $0.setTitleColor(.BackgroundDay, for: .normal)
+            $0.backgroundColor = .blackDay
+            $0.setTitleColor(.backgroundDay, for: .normal)
             $0.layer.cornerRadius = 16
             $0.layer.masksToBounds = true
             view.addSubview($0)
         }
-        view.backgroundColor = .BackgroundDay
+        view.backgroundColor = .backgroundDay
     // MARK: - Layout
         NSLayoutConstraint.activate([
             habitButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -69,7 +69,7 @@ final class TrackersTypeViewController: UIViewController {
         }
         
         let navigationController = UINavigationController(rootViewController: habitViewController)
-        navigationController.navigationBar.barTintColor = .BackgroundDay
+        navigationController.navigationBar.barTintColor = .backgroundDay
         navigationController.navigationBar.shadowImage = UIImage()
         present(navigationController, animated: true)
     }
@@ -86,7 +86,7 @@ final class TrackersTypeViewController: UIViewController {
         eventViewController.chooseIrregularEvent = true
         
         let navigationController = UINavigationController(rootViewController: eventViewController)
-        navigationController.navigationBar.barTintColor = .BackgroundDay
+        navigationController.navigationBar.barTintColor = .backgroundDay
         navigationController.navigationBar.shadowImage = UIImage()
         present(navigationController, animated: true)
     }

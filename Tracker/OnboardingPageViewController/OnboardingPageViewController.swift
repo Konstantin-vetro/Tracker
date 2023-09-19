@@ -53,7 +53,7 @@ final class OnboardingPageViewController: UIViewController {
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         button.layer.cornerRadius = 16
         button.clipsToBounds = true
-        button.backgroundColor = .BlackDay
+        button.backgroundColor = .blackDay
         button.addTarget(self, action: #selector(goToTrackerList), for: .touchUpInside)
         return button
     }()
@@ -61,7 +61,7 @@ final class OnboardingPageViewController: UIViewController {
     private lazy var textLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 32, weight: .bold)
-        label.textColor = .BlackDay
+        label.textColor = .blackDay
         label.textAlignment = .center
         label.numberOfLines = 2
         label.text = blueScreen

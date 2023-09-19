@@ -22,7 +22,7 @@ final class StatisticViewController: UIViewController {
     
     private lazy var statisticView: UIView = {
         let view = UIView()
-        view.backgroundColor = .BackgroundDay
+        view.backgroundColor = .backgroundDay
         view.layer.cornerRadius = 16
         view.addSubview(countTrackers)
         view.addSubview(descriptionCount)
@@ -33,7 +33,7 @@ final class StatisticViewController: UIViewController {
         let label = UILabel()
         label.text = completeTrackers?.description
         label.font = UIFont.systemFont(ofSize: 32, weight: .bold)
-        label.textColor = .BlackDay
+        label.textColor = .blackDay
         return label
     }()
     
@@ -41,7 +41,7 @@ final class StatisticViewController: UIViewController {
         let label = UILabel()
         label.text = NSLocalizedString("TrackersCompleted", comment: "")
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        label.textColor = .BlackDay
+        label.textColor = .blackDay
         label.textAlignment = .left
         return label
     }()
@@ -71,7 +71,7 @@ final class StatisticViewController: UIViewController {
     }
     // MARK: - Setup
     private func setupUI() {
-        view.backgroundColor = .BackgroundDay
+        view.backgroundColor = .backgroundDay
         view.addSubview(statisticView)
         [statisticView, countTrackers, descriptionCount].forEach { $0.translatesAutoresizingMaskIntoConstraints = false}
         
@@ -95,12 +95,14 @@ final class StatisticViewController: UIViewController {
     
     private func showBackgroundView() {
         if completeTrackers == 0 {
-            let emptyView = EmptyView(frame: CGRect(x: 0,
-                                                    y: 0,
-                                                    width: view.bounds.width,
-                                                    height: view.bounds.height),
-                                      text: NSLocalizedString("NoAnalyze", comment: ""),
-                                      uiImage: UIImage(named: "noStatisticsPlaceholder"))
+            let emptyView = EmptyView(
+                frame: CGRect(x: 0,
+                              y: 0,
+                              width: view.bounds.width,
+                              height: view.bounds.height),
+                text: NSLocalizedString("NoAnalyze", comment: ""),
+                uiImage: UIImage(named: "noStatisticsPlaceholder")
+            )
             view = emptyView
         } else {
             view = UIView()

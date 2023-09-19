@@ -16,10 +16,17 @@ final class EmptyView: UIView {
         return label
     }()
     
-    init(frame: CGRect, useImage: Bool? = nil, text: String? = nil, uiImage: UIImage? = nil) {
+    init(
+        frame: CGRect,
+        useImage: Bool? = nil,
+        text: String? = nil,
+        uiImage: UIImage? = nil
+    ) {
         super.init(frame: frame)
-        guard let imageCollection = UIImage(named: "placeholderImage"),
-              let imageFoundTrackers = UIImage(named: "noFound") else { return }
+        guard
+            let imageCollection = UIImage(named: "placeholderImage"),
+            let imageFoundTrackers = UIImage(named: "noFound")
+        else { return }
         
         placeholderImage.image = useImage ?? false ? imageCollection : imageFoundTrackers
         let emptyCollection = NSLocalizedString("EmptyCollection", comment: "")
@@ -45,7 +52,7 @@ final class EmptyView: UIView {
             addSubview($0)
         }
         
-        backgroundColor = .BackgroundDay
+        backgroundColor = .backgroundDay
         
         NSLayoutConstraint.activate([
             placeholderImage.centerXAnchor.constraint(equalTo: centerXAnchor),

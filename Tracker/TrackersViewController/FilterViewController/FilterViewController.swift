@@ -32,7 +32,7 @@ final class FilterViewController: UIViewController {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "filterCell")
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.backgroundColor = .BackgroundDay
+        tableView.backgroundColor = .backgroundDay
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
@@ -47,7 +47,7 @@ final class FilterViewController: UIViewController {
     
     private func setupView() {
         view.addSubview(tableView)
-        view.backgroundColor = .BackgroundDay
+        view.backgroundColor = .backgroundDay
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
