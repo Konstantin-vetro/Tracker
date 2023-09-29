@@ -8,8 +8,6 @@ import UIKit
 final class EmojiCollectionViewCell: UICollectionViewCell {
     static let identifier = "cell"
     
-    var isEmojiSelected: Bool = false
-    
     let titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 35)
@@ -19,6 +17,8 @@ final class EmojiCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        layer.cornerRadius = 10
         
         contentView.addSubview(titleLabel)
         

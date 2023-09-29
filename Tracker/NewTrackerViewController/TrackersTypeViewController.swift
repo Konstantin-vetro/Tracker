@@ -8,7 +8,8 @@ import UIKit
 final class TrackersTypeViewController: UIViewController {
     private lazy var habitButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Привычка", for: .normal)
+        let habit = NSLocalizedString("Habit", comment: "")
+        button.setTitle(habit, for: .normal)
         button.addTarget(self, action: #selector(addNewHabit), for: .touchUpInside)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         return button
@@ -16,13 +17,15 @@ final class TrackersTypeViewController: UIViewController {
     
     private lazy var irregularEventButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Нерегулярное событие", for: .normal)
+        let event = NSLocalizedString("IrregularEvent", comment: "")
+        button.setTitle(event, for: .normal)
         button.addTarget(self, action: #selector(addIreggularEvent), for: .touchUpInside)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         return button
     }()
     
     weak var delegate: TrackerViewControllerDelegate?
+    private let analyticsService: AnalyticsServiceProtocol = AnalyticsService()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,13 +36,13 @@ final class TrackersTypeViewController: UIViewController {
         [habitButton, irregularEventButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             $0.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-            $0.backgroundColor = .BlackDay
-            $0.tintColor = .white
+            $0.backgroundColor = .blackDay
+            $0.setTitleColor(.backgroundDay, for: .normal)
             $0.layer.cornerRadius = 16
             $0.layer.masksToBounds = true
             view.addSubview($0)
         }
-        view.backgroundColor = .white
+        view.backgroundColor = .backgroundDay
     // MARK: - Layout
         NSLayoutConstraint.activate([
             habitButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -57,31 +60,33 @@ final class TrackersTypeViewController: UIViewController {
     // MARK: - Actions
     @objc
     private func addNewHabit() {
+        analyticsService.clickHabitReport()
         let habitViewController = NewTrackerViewController()
-        habitViewController.title = "Новая привычка"
+        habitViewController.title = NSLocalizedString("NewHabit", comment: "")
         habitViewController.onTrackerCreated = { [weak self] tracker, titleCategory in
             guard let self = self else { return }
-            self.delegate?.createTracker(tracker, titleCategory: titleCategory ?? "")
+            self.delegate?.createTracker(tracker, category: titleCategory ?? "")
         }
         
         let navigationController = UINavigationController(rootViewController: habitViewController)
-        navigationController.navigationBar.barTintColor = .white
+        navigationController.navigationBar.barTintColor = .backgroundDay
         navigationController.navigationBar.shadowImage = UIImage()
         present(navigationController, animated: true)
     }
     
     @objc
     private func addIreggularEvent() {
+        analyticsService.clickEventReport()
         let eventViewController = NewTrackerViewController()
-        eventViewController.title = "Новое нерегулярное событие"
+        eventViewController.title = NSLocalizedString("NewEvent", comment: "")
         eventViewController.onTrackerCreated = { [weak self] (tracker, titleCategory) in
             guard let self = self else { return }
-            self.delegate?.createTracker(tracker, titleCategory: titleCategory ?? "")
+            self.delegate?.createTracker(tracker, category: titleCategory ?? "")
         }
         eventViewController.chooseIrregularEvent = true
         
         let navigationController = UINavigationController(rootViewController: eventViewController)
-        navigationController.navigationBar.barTintColor = .white
+        navigationController.navigationBar.barTintColor = .backgroundDay
         navigationController.navigationBar.shadowImage = UIImage()
         present(navigationController, animated: true)
     }

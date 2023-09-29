@@ -5,21 +5,12 @@
 
 import UIKit
 
-protocol AddNewСategoryViewControllerDelegate: AnyObject {
-    func editCategory(_ editText: String)
-    func addCategory(_ text: String)
-}
-
 final class CategoriesViewController: UIViewController {
     private lazy var tableView: UITableView = {
-        let tableView = UITableView(frame: CGRect(x: 0,
-                                                  y: 0,
-                                                  width: view.bounds.size.width,
-                                                  height: 500),
-                                    style: .insetGrouped)
+        let tableView = UITableView(frame: .zero, style: .insetGrouped)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "categoryCell")
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-        tableView.backgroundColor = .white
+        tableView.backgroundColor = .backgroundDay
         tableView.dataSource = self
         tableView.delegate = self
         return tableView
@@ -27,9 +18,9 @@ final class CategoriesViewController: UIViewController {
     
     private lazy var addCategoryButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Добавить категорию", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .BlackDay
+        button.setTitle(NSLocalizedString("AddCategory", comment: ""), for: .normal)
+        button.setTitleColor(.backgroundDay, for: .normal)
+        button.backgroundColor = .blackDay
         button.layer.cornerRadius = 16
         button.addTarget(self, action: #selector(addNewCategory), for: .touchUpInside)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
@@ -77,7 +68,7 @@ final class CategoriesViewController: UIViewController {
             view.addSubview($0)
         }
         
-        view.backgroundColor = .white
+        view.backgroundColor = .backgroundDay
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -104,20 +95,22 @@ final class CategoriesViewController: UIViewController {
         addNewCategoryViewController.editText = text
         
         let navigationController = UINavigationController(rootViewController: addNewCategoryViewController)
-        navigationController.navigationBar.barTintColor = .white
+        navigationController.navigationBar.barTintColor = .backgroundDay
         navigationController.navigationBar.shadowImage = UIImage()
         present(navigationController, animated: true)
     }
     
     private func updateTableView(forTable: Bool) {
         if viewModel.isEmpty() {
-            let emptyView = EmptyView(frame: CGRect(
-                x: 0,
-                y: 0,
-                width: view.bounds.width,
-                height: view.bounds.height),
-                                      useImage: forTable,
-                                      text: "Привычки и события можно\nобъединить по смыслу")
+            let emptyView = EmptyView(
+                frame: CGRect(
+                    x: 0,
+                    y: 0,
+                    width: view.bounds.width,
+                    height: view.bounds.height),
+                useImage: forTable,
+                text: NSLocalizedString("EmptyCategories", comment: "")
+            )
             tableView.backgroundView = emptyView
         } else {
             tableView.backgroundView = nil
@@ -176,7 +169,7 @@ extension CategoriesViewController: UITableViewDelegate {
     ) -> UIContextMenuConfiguration? {
         editingIndexPath = indexPath
         
-        let editAction = UIAction(title: "Редактировать") { [weak self] _ in
+        let editAction = UIAction(title: NSLocalizedString("Edit", comment: "")) { [weak self] _ in
             guard let self = self else { return }
             
             if let editingIndexPath = self.editingIndexPath {
@@ -185,7 +178,7 @@ extension CategoriesViewController: UITableViewDelegate {
             }
         }
         
-        let deleteAction = UIAction(title: "Удалить", attributes: .destructive) { [weak self] _ in
+        let deleteAction = UIAction(title: NSLocalizedString("Delete", comment: ""), attributes: .destructive) { [weak self] _ in
             guard let self = self else { return }
             self.viewModel.deleteCategory(at: indexPath)
             self.updateTableView(forTable: true)

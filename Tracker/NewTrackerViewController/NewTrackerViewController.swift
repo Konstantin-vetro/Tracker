@@ -5,17 +5,12 @@
 
 import UIKit
 
-protocol HabitDelegate: AnyObject {
-    func addDetailCategory(_ text: String)
-    func addDetailDays(_ days: [String])
-}
-
 final class NewTrackerViewController: UIViewController {
     private lazy var textField: UITextField = {
         let textField = UITextField()
         textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 30))
         textField.leftViewMode = .always
-        textField.placeholder = "Введите название трекера"
+        textField.placeholder = NSLocalizedString("EnterTracker", comment: "")
         textField.backgroundColor = .defaultColor
         textField.layer.cornerRadius = 10
         textField.clearButtonMode = .whileEditing
@@ -27,17 +22,26 @@ final class NewTrackerViewController: UIViewController {
     
     private lazy var messageLabel: UILabel = {
         let label = UILabel()
-        label.text = "Ограничение 38 символов"
-        label.textColor = .Red
+        label.text = NSLocalizedString("Limit", comment: "")
+        label.textColor = .customRed
+        label.font = UIFont.systemFont(ofSize: 17)
         return label
     }()
     
+    private lazy var daysButton: UIButton = {
+        let button = UIButton()
+        button.setTitleColor(.blackDay, for: .normal)
+        button.backgroundColor = .backgroundDay
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 32, weight: .bold)
+        button.addTarget(self, action: #selector(toogleRecordButton), for: .touchUpInside)
+        return button
+    }()
+    
     private lazy var tableView: UITableView = {
-        let tableView = UITableView(frame: CGRect(x: 0, y: 0, width: .zero, height: .zero),
-                                    style: .insetGrouped)
+        let tableView = UITableView(frame: .zero, style: .insetGrouped)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.register(SubtitledTableViewCell.self, forCellReuseIdentifier: "cell")
-        tableView.backgroundColor = .white
+        tableView.backgroundColor = .backgroundDay
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 75
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
@@ -50,11 +54,11 @@ final class NewTrackerViewController: UIViewController {
     
     private lazy var cancelButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Отменить", for: .normal)
+        button.setTitle(NSLocalizedString("Cancel", comment: ""), for: .normal)
         button.layer.borderWidth = 1
-        button.layer.borderColor = UIColor.Red.cgColor
-        button.setTitleColor(.Red, for: .normal)
-        button.backgroundColor = .white
+        button.layer.borderColor = UIColor.customRed.cgColor
+        button.setTitleColor(.customRed, for: .normal)
+        button.backgroundColor = .backgroundDay
         button.layer.cornerRadius = 16
         button.layer.masksToBounds = true
         button.addTarget(self, action: #selector(exitView), for: .touchUpInside)
@@ -64,12 +68,12 @@ final class NewTrackerViewController: UIViewController {
     
     private lazy var createButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Создать", for: .normal)
-        button.tintColor = .white
-        button.backgroundColor = .Gray
+        button.setTitle(NSLocalizedString("Create", comment: ""), for: .normal)
+        button.setTitleColor(.backgroundDay, for: .normal)
+        button.backgroundColor = .customGray
         button.layer.cornerRadius = 16
         button.layer.masksToBounds = true
-        button.addTarget(self, action: #selector(createNewTracker), for: .touchUpInside)
+        button.addTarget(self, action: #selector(createTracker), for: .touchUpInside)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         button.isEnabled = false
         return button
@@ -87,14 +91,12 @@ final class NewTrackerViewController: UIViewController {
     
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
-        scrollView.backgroundColor = .white
         scrollView.isScrollEnabled = true
         return scrollView
     }()
     
     private lazy var contentView: UIView = {
         let contentView = UIView()
-        contentView.backgroundColor = .white
         return contentView
     }()
     
@@ -107,22 +109,24 @@ final class NewTrackerViewController: UIViewController {
         collectionView.register(HeaderViewCell.self,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                 withReuseIdentifier: "header")
-        collectionView.backgroundColor = .white
+        collectionView.backgroundColor = .backgroundDay
         collectionView.allowsMultipleSelection = true
         collectionView.isScrollEnabled = false
         collectionView.dataSource = self
         collectionView.delegate = self
         return collectionView
     }()
-    
     // MARK: - Properties
-    private var labelBetweenTextFieldAndTableContraint: NSLayoutConstraint = NSLayoutConstraint()
-    private var tableViewHeightContraint: NSLayoutConstraint = NSLayoutConstraint()
-    private var collectionViewHeightContraint: NSLayoutConstraint = NSLayoutConstraint()
+    private var daysbuttonConstraintToTextField = NSLayoutConstraint()
+    private var labelBetweenTextFieldAndTableContraint = NSLayoutConstraint()
+    private var tableViewHeightContraint = NSLayoutConstraint()
+    private var collectionViewHeightContraint = NSLayoutConstraint()
     
     var chooseIrregularEvent: Bool = false
+    lazy var isEdit: Bool = false
     
-    private let namesButton: [String] = ["Категория", "Расписание"]
+    private let namesButton: [String] = [NSLocalizedString("Category", comment: ""),
+                                         NSLocalizedString("Schedule", comment: "")]
     
     private var detailTextCategory: String?
     private var detailTextDays: [String]?
@@ -139,42 +143,69 @@ final class NewTrackerViewController: UIViewController {
     private var isSelectedColor: IndexPath?
     
     var onTrackerCreated: ((_ tracker: Tracker, _ titleCategory: String?) -> Void)?
+    
+    var currentTracker: Tracker?
+    var editCategory: String?
+    var daysCount: Int?
+    var dayButtonToggled: Bool?
+    var date: Date?
+    
+    private let analyticsService: AnalyticsServiceProtocol = AnalyticsService()
+    private let trackerRecordStore = TrackerRecordStore()
     // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        if chooseIrregularEvent {
-            textField.placeholder = "Введите название события"
-        }
         hideKeyboardWhenTappedAround()
         setupViews()
         updateCollectionViewHeight()
+        editTracker()
     }
     // MARK: - Actions
     @objc
-    private func createNewTracker() {
-        guard let text = textField.text, let category = detailTextCategory else { return }
-        guard let selectedEmojieIndexPath = isSelectedEmoji,
-              let selectedColorIndexPath = isSelectedColor else { return }
+    private func createTracker() {
+        analyticsService.clickCreateTrackerReport()
+        guard let name = textField.text,
+              let category = detailTextCategory,
+              let selectedEmojieIndexPath = isSelectedEmoji,
+              let selectedColorIndexPath = isSelectedColor
+        else { return }
+        
         let emojie = emojies[selectedEmojieIndexPath.row]
         let color = colors[selectedColorIndexPath.row]
+        let finalShedule: [String]? = chooseIrregularEvent ?  nil : detailTextDays
         
-        if chooseIrregularEvent {
-            let newTracker = Tracker(id: UUID(), name: text, color: color, emojie: emojie, shedule: nil)
-            onTrackerCreated?(newTracker, category)
+        if isEdit {
+            guard let currentTracker = currentTracker else { return }
+            let updatedTracker = Tracker(id: currentTracker.id, name: name, color: color, emojie: emojie, shedule: finalShedule)
+            onTrackerCreated?(updatedTracker, category)
         } else {
-            guard let shedule = detailTextDays else { return }
-            let newTracker = Tracker(id: UUID(), name: text, color: color, emojie: emojie, shedule: shedule)
+            let newTracker = Tracker(id: UUID(), name: name, color: color, emojie: emojie, shedule: finalShedule)
             onTrackerCreated?(newTracker, category)
         }
         self.view.window?.rootViewController?.dismiss(animated: true)
     }
     
     @objc
-    private func exitView() {
-        dismiss(animated: true)
+    private func toogleRecordButton() {
+        guard let daysTracker = daysCount,
+              let date = date else { return }
+        dayButtonToggled?.toggle()
+
+        if dayButtonToggled ?? false {
+            daysCount = daysTracker + 1
+            try? trackerRecordStore.addRecord(TrackerRecord(id: currentTracker?.id ?? UUID(), date: date))
+        } else {
+            daysCount = daysTracker - 1
+            try? trackerRecordStore.deleteRecord(TrackerRecord(id: currentTracker?.id ?? UUID(), date: date))
+        }
+        updateDaysButtonTitle()
     }
     
+    @objc
+    private func exitView() {
+        analyticsService.clickExitViewForNewTracker()
+        dismiss(animated: true)
+    }
     // MARK: - SetupViews
     private func setupViews() {
         view.addSubview(scrollView)
@@ -192,9 +223,10 @@ final class NewTrackerViewController: UIViewController {
         
         tableViewHeightContraint = tableView.heightAnchor.constraint(equalToConstant: tableView.contentSize.height)
         collectionViewHeightContraint = collectionView.heightAnchor.constraint(equalToConstant: 0)
-        
+        daysbuttonConstraintToTextField = daysButton.bottomAnchor.constraint(equalTo: textField.topAnchor,
+                                                                           constant: 0)
         // MARK: - Layouts
-        [textField, messageLabel, tableView, collectionView, buttonStackView].forEach {
+        [daysButton, textField, messageLabel, tableView, collectionView, buttonStackView].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             contentView.addSubview($0)
         }
@@ -203,7 +235,7 @@ final class NewTrackerViewController: UIViewController {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
-        view.backgroundColor = .white
+        view.backgroundColor = .backgroundDay
         
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -218,8 +250,11 @@ final class NewTrackerViewController: UIViewController {
             
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
+            daysButton.topAnchor.constraint(equalTo: contentView.topAnchor),
+            daysButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            daysbuttonConstraintToTextField,
+            
             textField.heightAnchor.constraint(equalToConstant: 75),
-            textField.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 24),
             textField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             textField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
@@ -245,7 +280,7 @@ final class NewTrackerViewController: UIViewController {
             buttonStackView.bottomAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.bottomAnchor, constant: -15)
         ])
     }
-    
+    // MARK: - Functions
     private func updateCollectionViewHeight() {
         collectionView.collectionViewLayout.invalidateLayout()
         collectionView.layoutIfNeeded()
@@ -264,20 +299,64 @@ final class NewTrackerViewController: UIViewController {
 
         if !chooseIrregularEvent {
             if checkAllFields && detailTextDays != nil {
-                createButton.backgroundColor = .BlackDay
+                createButton.backgroundColor = .blackDay
                 createButton.isEnabled = true
             } else {
-                createButton.backgroundColor = .Gray
+                createButton.backgroundColor = .customGray
                 createButton.isEnabled = false
             }
         } else {
             if checkAllFields {
-                createButton.backgroundColor = .BlackDay
+                createButton.backgroundColor = .blackDay
                 createButton.isEnabled = true
             } else {
-                createButton.backgroundColor = .Gray
+                createButton.backgroundColor = .customGray
                 createButton.isEnabled = false
             }
+        }
+    }
+    
+    private func editTracker() {
+        guard let currentTracker = currentTracker else { return }
+        
+        if isEdit {
+            daysbuttonConstraintToTextField.constant = -40
+            
+            updateDaysButtonTitle()
+            
+            textField.text = currentTracker.name
+            detailTextCategory = editCategory
+            detailTextDays = currentTracker.shedule
+            
+            if let emojiIndex = emojies.firstIndex(of: currentTracker.emojie) {
+                let emojieIndexPath = IndexPath(row: emojiIndex, section: 0)
+                collectionView.selectItem(at: emojieIndexPath, animated: false, scrollPosition: [])
+                collectionView(collectionView, didSelectItemAt: emojieIndexPath)
+            }
+
+            if let colorIndex = colors.firstIndex(where: { UIColor.areAlmostEqual(color1: $0,
+                                                                                  color2: currentTracker.color) }) {
+                let colorIndexPath = IndexPath(row: colorIndex, section: 1)
+                collectionView.selectItem(at: colorIndexPath, animated: false, scrollPosition: [])
+                collectionView(collectionView, didSelectItemAt: colorIndexPath)
+            }
+            
+            createButton.setTitle(NSLocalizedString("Save", comment: ""), for: .normal)
+        } else {
+            daysbuttonConstraintToTextField.constant = 0
+        }
+    }
+    
+    private func updateDaysButtonTitle() {
+        guard let daysTracker = daysCount else { return }
+        let daysString = String.localizedStringWithFormat(NSLocalizedString("updateCounterText", comment: ""), daysTracker)
+        switch daysTracker % 10 {
+        case 1:
+            daysButton.setTitle("\(daysTracker) " + daysString, for: .normal)
+        case 2 ... 4:
+            daysButton.setTitle("\(daysTracker) " + daysString, for: .normal)
+        default:
+            daysButton.setTitle("\(daysTracker) " + daysString, for: .normal)
         }
     }
 }
@@ -323,18 +402,26 @@ extension NewTrackerViewController: UITableViewDataSource {
         
         guard let detailTextLabel = cell.detailTextLabel else { return cell }
         detailTextLabel.font = UIFont.systemFont(ofSize: 17)
-        detailTextLabel.textColor = .Gray
+        detailTextLabel.textColor = .customGray
         
         switch indexPath.row {
         case 0:
             detailTextLabel.text = detailTextCategory
         case 1:
             if detailTextDays?.count == 7 {
-                detailTextLabel.text = "Каждый день"
+                detailTextLabel.text = NSLocalizedString("EveryDay", comment: "")
             } else {
                 let sortedDays = detailTextDays?.sorted { first, second in
-                    let orderedDays = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
-                    return orderedDays.firstIndex(of: first)! < orderedDays.firstIndex(of: second)!
+                    let orderedDays = [
+                        NSLocalizedString("shortMonday", comment: ""),
+                        NSLocalizedString("shortTuesday", comment: ""),
+                        NSLocalizedString("shortWednesday", comment: ""),
+                        NSLocalizedString("shortThursday", comment: ""),
+                        NSLocalizedString("shortFriday", comment: ""),
+                        NSLocalizedString("shortSaturday", comment: ""),
+                        NSLocalizedString("shortSunday", comment: ""),
+                    ]
+                    return orderedDays.firstIndex(of: first) ?? 0 < orderedDays.firstIndex(of: second) ?? 0
                 }
                 let days = sortedDays?.joined(separator: ", ")
                 detailTextLabel.text = days
@@ -353,19 +440,19 @@ extension NewTrackerViewController: UITableViewDelegate {
         if indexPath.row == 0 {
             let categoriesViewController = CategoriesViewController()
             categoriesViewController.delegate = self
-            categoriesViewController.title = "Категория"
+            categoriesViewController.title = NSLocalizedString("Category", comment: "")
             
             let navigationController = UINavigationController(rootViewController: categoriesViewController)
-            navigationController.navigationBar.barTintColor = .white
+            navigationController.navigationBar.barTintColor = .backgroundDay
             navigationController.navigationBar.shadowImage = UIImage()
             present(navigationController, animated: true)
         } else if indexPath.row == 1 {
             let sheduleViewController = SheduleViewController()
             sheduleViewController.delegate = self
-            sheduleViewController.title = "Расписание"
+            sheduleViewController.title = NSLocalizedString("Schedule", comment: "")
             
             let navigationController = UINavigationController(rootViewController: sheduleViewController)
-            navigationController.navigationBar.barTintColor = .white
+            navigationController.navigationBar.barTintColor = .backgroundDay
             navigationController.navigationBar.shadowImage = UIImage()
             present(navigationController, animated: true)
         }
@@ -390,8 +477,8 @@ extension NewTrackerViewController: UICollectionViewDataSource {
             ) as? EmojiCollectionViewCell else { return UICollectionViewCell()}
             
             cell.titleLabel.text = emojies[indexPath.row]
-            cell.backgroundColor = cell.isSelected ? .LightGray : .clear
-           
+            cell.backgroundColor = cell.isSelected ? .customLightGray : .clear
+
             return cell
         } else if indexPath.section == 1 {
             guard let cell = collectionView.dequeueReusableCell(
@@ -399,8 +486,8 @@ extension NewTrackerViewController: UICollectionViewDataSource {
                 for: indexPath
             ) as? ColorsCollectionViewCell else { return UICollectionViewCell()}
             
-            cell.sizeToFit()
             cell.colorView.backgroundColor = colors[indexPath.row]
+            cell.configure(isSelected: cell.isSelected, for: colors, at: indexPath)
             
             return cell
         }
@@ -411,28 +498,27 @@ extension NewTrackerViewController: UICollectionViewDataSource {
 extension NewTrackerViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.section == 0 {
-            if let selectedCell = isSelectedEmoji {
-                let cell = collectionView.cellForItem(at: selectedCell)
-                cell?.backgroundColor = .clear
+            if let selectedCell = isSelectedEmoji,
+               let cell = collectionView.cellForItem(at: selectedCell) as? EmojiCollectionViewCell {
+                cell.backgroundColor = .clear
             }
-            let cell = collectionView.cellForItem(at: indexPath)
-            cell?.layer.cornerRadius = 10
-            cell?.backgroundColor = .LightGray
+            
+            if let cell = collectionView.cellForItem(at: indexPath) as? EmojiCollectionViewCell {
+                cell.backgroundColor = .customLightGray
+            }
+            
             isSelectedEmoji = indexPath
             setupCreateButton()
         } else if indexPath.section == 1 {
-            if let selectedCell = isSelectedColor {
-                let cell = collectionView.cellForItem(at: selectedCell)
-                cell?.layer.borderWidth = 0
-                cell?.layer.borderColor = .none
+            if let selectedCell = isSelectedColor,
+               let cell = collectionView.cellForItem(at: selectedCell) as? ColorsCollectionViewCell {
+                cell.configure(isSelected: false, at: selectedCell)
             }
-            let cell = collectionView.cellForItem(at: indexPath)
-            let transparentColors = colors.map { $0.withAlphaComponent(0.3) }
-            let bordedColor = transparentColors[indexPath.row]
             
-            cell?.layer.cornerRadius = 10
-            cell?.layer.borderWidth = 3
-            cell?.layer.borderColor = bordedColor.cgColor
+            if let cell = collectionView.cellForItem(at: indexPath) as? ColorsCollectionViewCell {
+                cell.configure(isSelected: true, for: colors, at: indexPath)
+            }
+            
             isSelectedColor = indexPath
             setupCreateButton()
         }
@@ -470,12 +556,22 @@ extension NewTrackerViewController: UICollectionViewDelegate, UICollectionViewDe
         }
         
         if indexPath.section == 0 {
-            guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as? HeaderViewCell else { return UICollectionReusableView()}
+            guard
+                let view = collectionView.dequeueReusableSupplementaryView(
+                    ofKind: kind,
+                    withReuseIdentifier: id,
+                    for: indexPath) as? HeaderViewCell
+            else { return UICollectionReusableView()}
             view.titleLabel.text = "Emoji"
             return view
         } else {
-            guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as? HeaderViewCell else { return UICollectionReusableView()}
-            view.titleLabel.text = "Цвет"
+            guard
+                let view = collectionView.dequeueReusableSupplementaryView(
+                    ofKind: kind,
+                    withReuseIdentifier: id,
+                    for: indexPath) as? HeaderViewCell
+            else { return UICollectionReusableView()}
+            view.titleLabel.text = NSLocalizedString("Color", comment: "")
             return view
         }
     }

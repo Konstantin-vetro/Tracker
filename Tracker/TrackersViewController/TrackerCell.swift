@@ -5,10 +5,6 @@
 
 import UIKit
 
-protocol TrackerCellDelegate: AnyObject {
-    func updateTrackerRecord(on cell: TrackerCell)
-}
-
 final class TrackerCell: UICollectionViewCell {
     static let identifier = "TrackerCell"
     
@@ -42,7 +38,7 @@ final class TrackerCell: UICollectionViewCell {
     private lazy var counterLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        label.textColor = .BlackDay
+        label.textColor = .blackDay
         return label
     }()
     
@@ -72,7 +68,7 @@ final class TrackerCell: UICollectionViewCell {
             colorView.addSubview($0)
         }
         
-        self.backgroundColor = .white
+        self.backgroundColor = .backgroundDay
         
         // MARK: - Layouts
         NSLayoutConstraint.activate([
@@ -114,7 +110,7 @@ final class TrackerCell: UICollectionViewCell {
             guard let delegate = delegate else { return }
             delegate.updateTrackerRecord(on: self)
         } else {
-            showAlert("Нельзя отмечать трекеры для будущих дат")
+            showAlert(NSLocalizedString("AlertMessage", comment: ""))
         }
     }
     // MARK: - Functions
@@ -125,7 +121,7 @@ final class TrackerCell: UICollectionViewCell {
         completeButton.backgroundColor = tracker.color
     }
     
-    func updateTracker(days: Int, isCompleted: Bool) {
+    func updateRecord(days: Int, isCompleted: Bool) {
         updateButton(isCompleted: isCompleted)
         updateCounterText(days: days)
     }
@@ -138,13 +134,14 @@ final class TrackerCell: UICollectionViewCell {
     }
     
     private func updateCounterText(days: Int) {
+        let daysString = String.localizedStringWithFormat(NSLocalizedString("updateCounterText", comment: ""), days)
         switch days % 10 {
         case 1:
-            counterLabel.text = "\(days) день"
+            counterLabel.text = "\(days) " + daysString
         case 2 ... 4:
-            counterLabel.text = "\(days) дня"
+            counterLabel.text = "\(days) " + daysString
         default:
-            counterLabel.text = "\(days) дней"
+            counterLabel.text = "\(days) " + daysString
         }
     }
     

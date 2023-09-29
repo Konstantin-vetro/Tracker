@@ -93,6 +93,29 @@ final class TrackerStore: NSObject {
         return trackerCoreData
     }
     
+    func updateTracker(with tracker: Tracker) throws {
+        let request = NSFetchRequest<TrackerCoreData>(entityName: "TrackerCoreData")
+        request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCoreData.trackerID), tracker.id.uuidString)
+        
+        do {
+            let fetchedTrackers = try context.fetch(request)
+            if let trackerToUpdate = fetchedTrackers.first {
+                trackerToUpdate.name = tracker.name
+                trackerToUpdate.color = uiCollorMarshalling.hexString(from: tracker.color)
+                trackerToUpdate.emojie = tracker.emojie
+                trackerToUpdate.shedule = weekdaysMarshalling.makeStringFromArray(tracker.shedule ?? [])
+                
+                try context.save()
+            } else {
+                print("Failed to find tracker with UUID: \(tracker.id)")
+                throw TrackerStoreError.decodingErrorInvalidID
+            }
+        } catch {
+            print("Failed to fetch and update tracker: \(error)")
+            throw error
+        }
+    }
+    
     func deleteTracker(with id: UUID) throws {
         let request = NSFetchRequest<TrackerCoreData>(entityName: "TrackerCoreData")
         request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCoreData.trackerID), id.uuidString)

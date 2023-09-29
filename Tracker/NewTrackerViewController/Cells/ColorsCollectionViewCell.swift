@@ -19,6 +19,9 @@ final class ColorsCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        layer.cornerRadius = 10
+        layer.masksToBounds = true
+        
         contentView.addSubview(colorView)
         
         NSLayoutConstraint.activate(
@@ -33,5 +36,17 @@ final class ColorsCollectionViewCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func configure(isSelected: Bool, for colors: [UIColor]? = nil, at indexPath: IndexPath) {
+        if isSelected {
+            let bordedColor = colors?[indexPath.row].withAlphaComponent(0.3)
+            
+            layer.borderWidth = 3
+            layer.borderColor = bordedColor?.cgColor
+        } else {
+            layer.borderWidth = 0
+            layer.borderColor = .none
+        }
     }
 }

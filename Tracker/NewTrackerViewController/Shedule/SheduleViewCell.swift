@@ -5,10 +5,6 @@
 
 import UIKit
 
-protocol SheduleViewCellDelegate: AnyObject {
-    func didToogleSwitch(for day: String, isOn: Bool)
-}
-
 final class SheduleViewCell: UITableViewCell {
     static let identifier = "sheduleCell"
     
@@ -52,20 +48,20 @@ final class SheduleViewCell: UITableViewCell {
     // MARK: - Shorten the Days
     private func shortDays(for day: String) -> String {
         switch day {
-        case "Понедельник":
-            return "Пн"
-        case "Вторник":
-            return "Вт"
-        case "Среда":
-            return "Ср"
-        case "Четверг":
-            return "Чт"
-        case "Пятница":
-            return "Пт"
-        case "Суббота":
-            return "Сб"
-        case "Воскресенье":
-            return "Вс"
+        case NSLocalizedString("Monday", comment: ""):
+            return NSLocalizedString("shortMonday", comment: "")
+        case NSLocalizedString("Tuesday", comment: ""):
+            return NSLocalizedString("shortTuesday", comment: "")
+        case NSLocalizedString("Wednesday", comment: ""):
+            return NSLocalizedString("shortWednesday", comment: "")
+        case NSLocalizedString("Thursday", comment: ""):
+            return NSLocalizedString("shortThursday", comment: "")
+        case NSLocalizedString("Friday", comment: ""):
+            return NSLocalizedString("shortFriday", comment: "")
+        case NSLocalizedString("Saturday", comment: ""):
+            return NSLocalizedString("shortSaturday", comment: "")
+        case NSLocalizedString("Sunday", comment: ""):
+            return NSLocalizedString("shortSunday", comment: "")
         default:
             return ""
         }

@@ -6,11 +6,7 @@
 import UIKit
 
 final class EmptyView: UIView {
-    private lazy var placeholderImage: UIImageView = {
-        let image = UIImage(named: "placeholderImage")
-        let imageView = UIImageView(image: image)
-        return imageView
-    }()
+    private lazy var placeholderImage =  UIImageView()
     
     private lazy var textLabel: UILabel = {
         let label = UILabel()
@@ -20,16 +16,26 @@ final class EmptyView: UIView {
         return label
     }()
     
-    init(frame: CGRect, useImage: Bool, text: String? = nil) {
+    init(
+        frame: CGRect,
+        useImage: Bool? = nil,
+        text: String? = nil,
+        uiImage: UIImage? = nil
+    ) {
         super.init(frame: frame)
-        guard let imageCollection = UIImage(named: "placeholderImage") else { return }
-        guard let imageFoundTrackers = UIImage(named: "noFound") else { return }
+        guard
+            let imageCollection = UIImage(named: "placeholderImage"),
+            let imageFoundTrackers = UIImage(named: "noFound")
+        else { return }
         
-        self.placeholderImage.image = useImage ? imageCollection : imageFoundTrackers
+        placeholderImage.image = useImage ?? false ? imageCollection : imageFoundTrackers
+        let emptyCollection = NSLocalizedString("EmptyCollection", comment: "")
+        let emptyFound = NSLocalizedString("EmptyFound", comment: "")
         if text != nil {
-            self.textLabel.text = text
+            placeholderImage.image = uiImage
+            textLabel.text = text
         } else {
-            self.textLabel.text = useImage ? "Что будем отслеживать?" : "Ничего не найдено"
+            textLabel.text = useImage ?? false ? emptyCollection : emptyFound
         }
         
         setupViews()
@@ -46,7 +52,7 @@ final class EmptyView: UIView {
             addSubview($0)
         }
         
-        backgroundColor = .white
+        backgroundColor = .backgroundDay
         
         NSLayoutConstraint.activate([
             placeholderImage.centerXAnchor.constraint(equalTo: centerXAnchor),

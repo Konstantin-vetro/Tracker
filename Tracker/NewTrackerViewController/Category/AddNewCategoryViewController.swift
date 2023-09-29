@@ -10,7 +10,7 @@ final class AddNewCategoryViewController: UIViewController {
         let textField = UITextField()
         textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 30))
         textField.leftViewMode = .always
-        textField.placeholder = "Введите название категории"
+        textField.placeholder = NSLocalizedString("EnterCategory", comment: "")
         textField.backgroundColor = .defaultColor
         textField.layer.cornerRadius = 16
         textField.clearButtonMode = .whileEditing
@@ -23,9 +23,9 @@ final class AddNewCategoryViewController: UIViewController {
     
     private lazy var doneButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Готово", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .Gray
+        button.setTitle(NSLocalizedString("Done", comment: ""), for: .normal)
+        button.setTitleColor(.backgroundDay, for: .normal)
+        button.backgroundColor = .customGray
         button.layer.cornerRadius = 16
         button.addTarget(self, action: #selector(saveCategory), for: .touchUpInside)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
@@ -44,7 +44,7 @@ final class AddNewCategoryViewController: UIViewController {
         setupViews()
         editCategory()
         hideKeyboardWhenTappedAround()
-        title = isEdit ? "Редактировать" : "Новая категория"
+        title = isEdit ? NSLocalizedString("Edit", comment: "") : NSLocalizedString("NewCategory", comment: "")
     }
     // MARK: - Layouts
     private func setupViews() {
@@ -53,7 +53,7 @@ final class AddNewCategoryViewController: UIViewController {
             view.addSubview($0)
         }
         
-        view.backgroundColor = .white
+        view.backgroundColor = .backgroundDay
         
         NSLayoutConstraint.activate([
             textField.heightAnchor.constraint(equalToConstant: 60),
@@ -83,7 +83,7 @@ final class AddNewCategoryViewController: UIViewController {
         if isEdit {
             textField.text = editText
             
-            doneButton.backgroundColor = .BlackDay
+            doneButton.backgroundColor = .blackDay
             doneButton.setTitleColor(.white, for: .normal)
             doneButton.isEnabled = true
         }
@@ -103,21 +103,20 @@ extension AddNewCategoryViewController: UITextFieldDelegate {
     ) -> Bool {
         let newText = (textField.text as NSString?)?.replacingCharacters(in: range, with: string) ?? ""
         if newText.isEmpty || newText.first == " " {
-            doneButton.backgroundColor = .Gray
-            doneButton.setTitleColor(.white, for: .normal)
+            doneButton.backgroundColor = .customGray
             doneButton.isEnabled = false
             return newText != " "
         } else {
-            doneButton.backgroundColor = .BlackDay
-            doneButton.setTitleColor(.white, for: .normal)
+            doneButton.backgroundColor = .blackDay
             doneButton.isEnabled = true
         }
+        doneButton.setTitleColor(.backgroundDay, for: .normal)
         return true
     }
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
         if textField.text?.isEmpty == true {
-            doneButton.backgroundColor = .Gray
+            doneButton.backgroundColor = .customGray
             doneButton.setTitleColor(.white, for: .normal)
         }
     }
