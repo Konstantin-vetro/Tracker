@@ -1,4 +1,8 @@
-# ТЗ мобильного приложения для трекинга привычек
+# Мобильное приложение для трекинга привычек
+
+![1](https://github.com/Konstantin-vetro/Tracker/assets/124914005/be1d6f3d-102f-4aac-aae6-4599e7a2d1f1)
+![2](https://github.com/Konstantin-vetro/Tracker/assets/124914005/e93abe0e-1991-442c-8427-6a5bed2050c8)
+![3](https://github.com/Konstantin-vetro/Tracker/assets/124914005/d41d69b0-c42e-4745-b467-16ed5279206b)
 
 # Ссылки
 
